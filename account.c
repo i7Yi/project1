@@ -9,23 +9,22 @@ void sign_in() // 注册
 	int flag = 0;
 	char userName[10];
 	char passWorld[10];
-	char userName1[10];
+	char name1[20];
+	char phone1[12];
+	char userName1[10];//储存txt文件账户信息用于比对
 	char passWorld1[10];
 	while (1)
 	{
-		fflush(stdin);
 		printf("\t注册(用户名密码最多9位)\n");
+		if ((fp = fopen("enter.txt", "a+")) == NULL)
+		{
+			printf("\tERROR!\n");
+			exit(0);
+		}
 		printf("\t用户名:");
 		scanf("%s", userName);
-		fflush(stdin);
-
-		if ((fp = fopen("enter.txt", "rt")) == NULL)
-		{
-			printf("无法打开文件 enter.txt\n");
-			return;
-		}
-
-		while (fscanf(fp, "%s %s", userName1, passWorld1) == 2)
+		getchar();
+		while (fscanf(fp, "%s %s %s %s", userName1, passWorld1,name1,phone1) == 4)
 		{
 			if (!strcmp(userName, userName1))
 			{
@@ -49,6 +48,7 @@ void sign_in() // 注册
 			{
 			case 1:
 				flag = 0;
+				getchar();
 				continue;
 				break;
 			case 2:
@@ -61,48 +61,136 @@ void sign_in() // 注册
 		{
 			printf("\t密码:");
 			scanf("%s", passWorld);
+			printf("\t姓名:");
+			scanf("%s", name1);
+			printf("\t电话:");
+			scanf("%s", phone1);
 			getchar();
-			if ((fp = fopen("enter.txt", "at")) == NULL)
+			fp = fopen("enter.txt", "a+");
+			if (fp == NULL)
 			{
 				printf("无法打开文件 enter.txt\n");
 				return;
 			}
 			printf("\t注册成功！按任意键继续");
-			getchar();
-			fprintf(fp, "%s %s\n", userName, passWorld);
+			// 检查文件是否为空
+			fseek(fp, 0, SEEK_END);  // 将文件指针移动到文件末尾
+			long fileSize = ftell(fp);  // 获取文件大小
+			if (fileSize != 0) {
+				fprintf(fp,"\n");
+			}
+			rewind(fp);  // 将文件指针重新移动到文件开头
+			fprintf(fp, "%s %s %s %s", userName, passWorld,name1,phone1);
 			fclose(fp); // 关闭文件
+			getchar();
 			break;
 		}
 	}
 }
 
-int Delete() {//删除
-	FILE* fp;
-	int n = 0;
-	AC ac[1000];
-
-	fp = fopen("enter.txt", "rt");
-	if (fp == NULL) {
+//void sign_in_user() // 租客注册
+//{
+//	FILE* fp;
+//	int flag = 0;
+//	char userName[10];
+//	char passWorld[10];
+//	char userName1[10];
+//	char passWorld1[10];
+//	while (1)
+//	{
+//		printf("\t注册(用户名密码最多9位)\n");
+//		printf("\t用户名:");
+//		scanf("%s", userName);
+//
+//		if ((fp = fopen("enter.txt", "rt")) == NULL)
+//		{
+//			printf("无法打开文件 enter.txt\n");
+//			return;
+//		}
+//
+//		while (fscanf(fp, "%s %s", userName1, passWorld1) == 2)
+//		{
+//			if (!strcmp(userName, userName1))
+//			{
+//				printf("\t用户名重复\n");
+//				flag = 1;
+//				break;
+//			}
+//		}
+//
+//
+//
+//		if (flag == 1)
+//		{
+//			printf("\t");
+//			printf("1.换个名字 2.返回菜单\n");
+//			printf("\t");
+//			int judge;
+//			scanf("%d", &judge);
+//
+//			switch (judge)
+//			{
+//			case 1:
+//				flag = 0;
+//				continue;
+//				break;
+//			case 2:
+//				system("cls");
+//				enter();
+//				return;
+//			}
+//		}
+//		else
+//		{
+//			printf("\t密码:");
+//			scanf("%s", passWorld);
+//			getchar();
+//			if ((fp = fopen("enter.txt", "at")) == NULL)
+//			{
+//				printf("无法打开文件 enter.txt\n");
+//				return;
+//			}
+//			printf("\t注册成功！按任意键继续");
+//			getchar();
+//			fprintf(fp, "%s %s\n", userName, passWorld);
+//			fclose(fp); // 关闭文件
+//			break;
+//		}
+//	}
+//}
+void display_info(FILE** fp, int* n,AC ac[1000]) {
+	*fp = fopen("enter.txt", "rt");
+	if (*fp == NULL) {
 		printf("\t\033[36m打开文件失败 如有备份请尝试恢复！\n");
+		Sleep(2000);
 		exit(1);
 	}
 
-	// 读取用户信息
-	while (fscanf(fp, "%s %s", ac[n].userName1, ac[n].passWorld1) == 2) {
-		n++;
+	while (fscanf(*fp, "%s %s %s %s", ac[*n].userName1, ac[*n].passWorld1, ac[*n].name, ac[*n].phone) == 4) {
+		(*n)++;
 	}
-	fclose(fp);
+
+	fclose(*fp);
+
+	if (*n > 0) {
+		// 显示用户列表
+		printf("\033[36m\t%-8s\t\t%-8s\t\t%-8s\t\t%-8s\n", "用户名", "密码", "姓名", "电话");
+		for (int i = 0; i < *n; i++) {
+			printf("\t%-8s\t%-8s\t%-8s\t\t%-8s\n", ac[i].userName1, ac[i].passWorld1, ac[i].name, ac[i].phone);
+		}
+	}
+}
+
+int Delete() {//删除
+	AC ac[1000];
+	FILE* fp = fopen("enter.txt", "rt");
+	int n = 0;
+	display_info(fp, &n,ac);
 
 	if (n > 0) {
-		// 显示用户列表
-		printf("\033[36m\t%-8s\t\t%-8s\n", "用户名", "密码");
-		for (int i = 0; i < n; i++) {
-			printf("\t%-8s\t%-8s\n", ac[i].userName1, ac[i].passWorld1);
-		}
-
 		printf("\t输入你要删除的用户名\n");
 		printf("\t用户名: ");
-		printf("\033[37m\t");
+		printf("\033[37m");
 		char ch[20];
 		scanf("%s", ch);
 
@@ -117,6 +205,8 @@ int Delete() {//删除
 			for (int j = i; j < n - 1; j++) {
 				strcpy(ac[j].userName1, ac[j + 1].userName1);
 				strcpy(ac[j].passWorld1, ac[j + 1].passWorld1);
+				strcpy(ac[j].name, ac[j + 1].name);
+				strcpy(ac[j].phone, ac[j + 1].phone);
 			}
 			n--;
 
@@ -127,7 +217,7 @@ int Delete() {//删除
 				exit(1);
 			}
 			for (int k = 0; k < n; k++) {
-				fprintf(fp, "%s %s\n", ac[k].userName1, ac[k].passWorld1);
+				fprintf(fp, "%s %s %s %s\n", ac[k].userName1, ac[k].passWorld1,ac[k].name,ac[k].phone);
 			}
 			fclose(fp);
 			printf("\t删除成功！按任意键继续\n");
@@ -153,24 +243,10 @@ void modify()//管理员重置密码
 	AC ac[100];
 	int n = 0;
 	fp = fopen("enter.txt", "rt");
-	if (fp == NULL) {
-		printf("\t打开文件失败\n");
-		exit(1);
-	}
-
-	// 读取用户信息
-	while (fscanf(fp, "%s %s", ac[n].userName1, ac[n].passWorld1) == 2) {
-		n++;
-	}
-	fclose(fp);
+	display_info(fp, &n, ac);
 	char flag[5];
 	if (n > 0)
 	{
-		// 显示用户列表
-		printf("\033[36m\t%-8s\t\t%-8s\n", "用户名", "密码");
-		for (int i = 0; i < n; i++) {
-			printf("\t%-8s\t%-8s\n", ac[i].userName1, ac[i].passWorld1);
-		}
 label_2:
 		printf("\t输入你要重置密码的用户名\n");
 		printf("\033[37m\t");
@@ -199,7 +275,7 @@ label_2:
 					exit(1);
 				}
 				for (int k = 0; k < n; k++) {
-					fprintf(fp, "%s %s\n", ac[k].userName1, ac[k].passWorld1);
+					fprintf(fp, "%s %s %s %s\n", ac[k].userName1, ac[k].passWorld1,ac[k].name,ac[k].phone);
 				}
 				fclose(fp);
 				printf("\t已将%s的密码重置为\"888888\",按任意键继续");
@@ -235,7 +311,8 @@ void enter_user()
 	int n = 0;
 	fp = fopen("enter.txt", "rt");
 	if (fp == NULL) {
-		printf("\t打开文件失败\n");
+		printf("\t数据丢失，请联系管理员 按任意键继续\n");
+		getchar();
 		exit(1);
 	}
 	while (fscanf(fp, "%s %s", ac[n].userName1, ac[n].passWorld1) == 2) {
@@ -312,6 +389,8 @@ void loadAccount(AC acc[], int* count, FILE* fp) {
 	while (!feof(fp) && *count < MAX_NUM) {
 		fscanf(fp, "%s", acc[*count].userName1);
 		fscanf(fp, "%s", acc[*count].passWorld1);
+		fscanf(fp, "%s", acc[*count].name);
+		fscanf(fp, "%s", acc[*count].phone);
 		(*count)++;
 
 	}
@@ -322,8 +401,12 @@ void saveAccount(AC acc[], int count, FILE* fp)
 	int i;
 	for (i = 0; i < count-1; i++) {
 		fprintf(fp, "%s ", acc[i].userName1);
-		fprintf(fp, "%s\n", acc[i].passWorld1 );
+		fprintf(fp, "%s ", acc[i].passWorld1 );
+		fprintf(fp, "%s ", acc[i].name);
+		fprintf(fp, "%s\n", acc[i].phone);
 	}
 	fprintf(fp, "%s ", acc[i].userName1);
-	fprintf(fp, "%s", acc[i].passWorld1);
+	fprintf(fp, "%s ", acc[i].passWorld1);
+	fprintf(fp, "%s ", acc[i].name);
+	fprintf(fp, "%s", acc[i].phone);
 }
