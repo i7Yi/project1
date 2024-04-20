@@ -15,7 +15,7 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
         fclose(file);
     }
     else {
-        printf("\t\033[31m无法打开文件 house_info.txt，正在创建新文件...\n");
+        printf("\t\033[31mhouse_info.txt不存在，正在创建新文件...\n");
         file = fopen("house_info.txt", "w");
         if (file != NULL) {
             printf("\t新文件 house_info.txt 创建成功！\n");

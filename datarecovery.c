@@ -1,5 +1,5 @@
 #include "datarecovery.h"
-void data_backup(struct House houses[MAX_NUM], struct Reservation reservations[],AC accs[])
+void data_backup(struct House houses[MAX_NUM], struct Reservation* head,AC accs[])
 {
     int count = 0;
     FILE* fp;
@@ -19,7 +19,7 @@ void data_backup(struct House houses[MAX_NUM], struct Reservation reservations[]
     {
         saveHouseInfo(houses, count, fp);
         fclose(fp);
-        printf("\t\033[36mhouse_info备份成功！按任意键继续\n");
+        printf("\t\033[36mhouse_info备份成功！\n");
     }
     else
     {
@@ -30,7 +30,7 @@ void data_backup(struct House houses[MAX_NUM], struct Reservation reservations[]
     //reservation
     fp = fopen("reservation_info.txt", "r");
     if (fp != NULL) {
-        loadReservationInfo(reservations, &count, fp);
+        head = loadListFromFile(head, fp);
         fclose(fp);
     }
     else
@@ -42,9 +42,9 @@ void data_backup(struct House houses[MAX_NUM], struct Reservation reservations[]
     fp = fopen("Recovery/Reservation_info_r.txt", "w");
     if (fp != NULL)
     {
-        saveReservationInfo(reservations, count, fp);
+        saveListToFile(head, "Recovery/Reservation_info_r.txt");
         fclose(fp);
-        printf("\t\033[36mreservation备份成功！按任意键继续\n");
+        printf("\t\033[36mreservation备份成功！\n");
     }
     else
     {
@@ -107,7 +107,7 @@ void data_backup(struct House houses[MAX_NUM], struct Reservation reservations[]
     }
 }
 
-void recovery(struct House houses[MAX_NUM], struct Reservation reservations[],AC accs[])
+void recovery(struct House houses[MAX_NUM], struct Reservation **head,AC accs[])
 {
     int count = 0;
     FILE* fp;
@@ -138,20 +138,21 @@ void recovery(struct House houses[MAX_NUM], struct Reservation reservations[],AC
     //reservation
     fp = fopen("Recovery/Reservation_info_r.txt", "r");
     if (fp != NULL) {
-        loadReservationInfo(reservations, &count, fp);
+        head = loadListFromFile(head, fp);
         fclose(fp);
     }
     else
     {
-        printf("\t备份不存在！恢复失败按任意键继续");
+        printf("\t源文件不存在！reservation恢复失败 按任意键继续");
+        getchar();
         return;
     }
     fp = fopen("reservation_info.txt", "w");
     if (fp != NULL)
     {
-        saveReservationInfo(reservations, count, fp);
+        saveListToFile(head, "reservation_info.txt");
         fclose(fp);
-        printf("\033[36mreservation_info恢复成功!\n");
+        printf("\t\033[36mreservation恢复成功！\n");
     }
     else
     {
@@ -214,5 +215,3 @@ void recovery(struct House houses[MAX_NUM], struct Reservation reservations[],AC
         exit(0);
     }
 }
-
-

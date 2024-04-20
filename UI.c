@@ -105,8 +105,8 @@ void enter()		//登录界面
 				}
 				else if (j_info == 2)
 				{
-					struct Reservation reservations[MAX_NUM];
-					interface_reservation(reservations);
+					struct Reservation* head = NULL;
+					interface_reservation(head);
 					goto label_1;
 					break;
 				}
@@ -124,7 +124,7 @@ void enter()		//登录界面
 		}
 		case 4: {//数据备份
 			struct House houses_data[MAX_NUM];
-			struct Reservation reservations_data[MAX_NUM];
+			struct Reservation* head = NULL;
 			AC accs[MAX_NUM];
 			system("cls");
 			printf("\t\033[31m=================================\n");
@@ -140,12 +140,12 @@ void enter()		//登录界面
 				scanf("%d", &j_modify_data);
 				if (j_modify_data == 1)
 				{
-					data_backup(houses_data, reservations_data, accs);
+					data_backup(houses_data, head, accs);
 					break;
 				}
 				else if (j_modify_data == 2)
 				{
-					recovery(houses_data, reservations_data, accs);
+					recovery(houses_data, head, accs);
 					break;
 				}
 				else if (j_modify_data == 3)

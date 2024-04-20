@@ -156,19 +156,19 @@ void sign_in() // 注册
 //		}
 //	}
 //}
-void display_info(FILE** fp, int* n,AC ac[1000]) {
-	*fp = fopen("enter.txt", "rt");
-	if (*fp == NULL) {
+void display_info(FILE* fp, int* n,AC ac[1000]) {
+	fp = fopen("enter.txt", "rt");
+	if (fp == NULL) {
 		printf("\t\033[36m打开文件失败 如有备份请尝试恢复！\n");
 		Sleep(2000);
 		exit(1);
 	}
 
-	while (fscanf(*fp, "%s %s %s %s", ac[*n].userName1, ac[*n].passWorld1, ac[*n].name, ac[*n].phone) == 4) {
+	while (fscanf(fp, "%s %s %s %s", ac[*n].userName1, ac[*n].passWorld1, ac[*n].name, ac[*n].phone) == 4) {
 		(*n)++;
 	}
 
-	fclose(*fp);
+	fclose(fp);
 
 	if (*n > 0) {
 		// 显示用户列表
