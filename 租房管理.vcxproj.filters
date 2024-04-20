@@ -53,5 +53,8 @@
     <ClInclude Include="datarecovery.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="agency_info.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

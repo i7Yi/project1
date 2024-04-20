@@ -1,5 +1,7 @@
 #pragma once
 #include "common.h"
-
-void data_backup(struct House house[], struct Reservation reservations[]);
-void recovery(struct House house[],struct Reservation reservations[]);
+#include "account.h"
+#include "house_info.h"
+#include "reservation.h"
+void data_backup(struct House house[], struct Reservation reservations[],AC acc[]);
+void recovery(struct House house[],struct Reservation reservations[],AC acc[]);

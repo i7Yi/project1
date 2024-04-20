@@ -3,14 +3,13 @@
 #include "reservation.h"
 #include "datarecovery.h"
 #include "account.h"
+#include "agency_info.h"
 
 void enter()		//登录界面
 {
 	printf("\t\033[31m=================================\n");
 	printf("\t|\t      登录:\t\t|\n");
 	printf("\t=================================\n");
-	FILE* fp;
-
 	printf("\t\033[36m1.管理员    2.中介    3.租客    4.返回主界面\n");
 	int choice;
 	printf("\t\033[37m");
@@ -19,31 +18,7 @@ void enter()		//登录界面
 	switch (choice)
 	{
 	case 1: {        //管理员，注册用户和删除
-		char adm[10];
-		printf("\t输入权限码\n");
-		printf("\t");
-		scanf("%s", adm);
-		if (strcmp(adm, "12"))   //权限码：12
-		{
-			printf("\t权限码错误\n");
-			printf("\t1.返回菜单\t2.退出\n");
-			printf("\t");
-			int judge;
-			scanf("%d", &judge);
-			fflush(stdin);
-			switch (judge)
-			{
-			case 1: {
-				system("cls");
-				enter();
-				break;
-			}
-			case 2: {
-				exit(0);
-			}
-			}
-			enter();
-		}
+		code();
 	label_1:
 		system("cls");
 		printf("\t\033[31m=================================\n");
@@ -75,60 +50,79 @@ void enter()		//登录界面
 			printf("\t3.返回\n\t---------------------------------\n");
 			printf("\033[37m\t");
 			int j_modify_menu;
-			scanf("%d", &j_modify_menu);
-			switch (j_modify_menu)
+			while (1)
 			{
-			case 1: {
-				int flag1;
-				do
+				scanf("%d", &j_modify_menu);
+				if (j_modify_menu == 1)
 				{
-					if (Delete() == 1)
+					int flag1;
+					do
 					{
-						flag1 = 0;
-						printf("\t是否继续删除：1.是  2.否\n");
-						printf("\t");
-						scanf("%d", &flag1);
-					}
-					else
-					{
-						goto label_1;
-					}
+						if (Delete() == 1)
+						{
+							flag1 = 0;
+							printf("\t是否继续删除：1.是  2.否\n");
+							printf("\t");
+							scanf("%d", &flag1);
+						}
+						else
+						{
+							goto label_1;
+						}
 
-				} while (flag1 == 1);
-				system("cls");
-				break;
+					} while (flag1 == 1);
+					system("cls");
+					break;
+				}
+				else if (j_modify_menu == 2)
+				{
+					modify_reset();
+					goto label_1;
+				}
+				else if (j_modify_menu == 3)
+				{
+					goto label_1;
+				}
+				else
+				{
+					printf("\t\033[31m无效指令！请重新输入:\n");
+					printf("\t\033[37m");
+				}
 			}
-			case 2: {
-				modify();
-				goto label_1;
-			}
-			case 3: {
-				goto label_1;
-			}
-			}
-
 		case 3: {//信息管理
 			interface_info();
 			int j_info;
-			scanf("%d", &j_info);
-			switch (j_info)
+			while (1)
 			{
-			case 1: {//房源信息
-				struct House houses[MAX_NUM];
-				interface_house_info(houses);
-				goto label_1;
-				break;
+				scanf("%d", &j_info);
+				if (j_info == 1)
+				{
+					struct House houses[MAX_NUM];
+					struct Agency agencys[MAX_NUM];
+					interface_house_info(houses, agencys);
+					goto label_1;
+					break;
+				}
+				else if (j_info == 2)
+				{
+					struct Reservation reservations[MAX_NUM];
+					interface_reservation(reservations);
+					goto label_1;
+					break;
+				}
+				else if (j_info == 3)
+				{
+					goto label_1;
+					break;
+				}
+				else
+				{
+					printf("\t\033[31m无效指令！请重新输入:\n");
+					printf("\t\033[37m");
+				}
 			}
-			case 2: {//预约信息
-				struct Reservation reservations[MAX_NUM];
-				interface_reservation(reservations);
-				goto label_1;
-				break;
-			}
-			}
-
 		}
-		case 4: {
+		case 4: {//数据备份
 			struct House houses_data[MAX_NUM];
 			struct Reservation reservations_data[MAX_NUM];
 			AC accs[MAX_NUM];
@@ -141,18 +135,29 @@ void enter()		//登录界面
 			printf("\t3.返回\n\t---------------------------------\n");
 			printf("\033[37m\t");
 			int j_modify_data;
-			scanf("%d", &j_modify_data);
-			switch (j_modify_data)
+			while (1)
 			{
-			case 1:
-				data_backup(houses_data, reservations_data,accs);
-				break;
-			case 2:
-				recovery(houses_data, reservations_data, accs);
-				break;
-			case 3:
-				return;
-				break;
+				scanf("%d", &j_modify_data);
+				if (j_modify_data == 1)
+				{
+					data_backup(houses_data, reservations_data, accs);
+					break;
+				}
+				else if (j_modify_data == 2)
+				{
+					recovery(houses_data, reservations_data, accs);
+					break;
+				}
+				else if (j_modify_data == 3)
+				{
+					goto label_1;
+					break;
+				}
+				else
+				{
+					printf("\t\033[31m无效指令！请重新输入:\n");
+					printf("\t\033[37m");
+				}
 			}
 		}
 		case 5: {//退出登录
@@ -172,31 +177,7 @@ void enter()		//登录界面
 		break;
 	}
 	case 2: {  //中介登录
-		char adm[10];
-		printf("\t输入权限码\n");
-		printf("\t");
-		scanf("%s", adm);
-		if (strcmp(adm, "12"))   //权限码：12
-		{
-			printf("\t权限码错误\n");
-			printf("\t1.返回菜单\t2.退出\n");
-			printf("\t");
-			int judge;
-			scanf("%d", &judge);
-			fflush(stdin);
-			switch (judge)
-			{
-			case 1: {
-				system("cls");
-				enter();
-				break;
-			}
-			case 2: {
-				exit(0);
-			}
-			}
-			enter();
-		}
+		code();
 		enter_user();
 	label_5:
 		system("cls");
@@ -219,13 +200,18 @@ void enter()		//登录界面
 			{
 			case 1: {//房源信息
 				struct House houses[MAX_NUM];
-				interface_house_info(houses);
+				struct Agency agencys[MAX_NUM];
+				interface_house_info(houses,agencys);
 				goto label_5;
 				break;
 			}
 			case 2: {//预约信息
 				struct Reservation reservations[MAX_NUM];
 				interface_reservation(reservations);
+				goto label_5;
+				break;
+			}
+			case 3: {//返回
 				goto label_5;
 				break;
 			}
@@ -270,7 +256,8 @@ void enter()		//登录界面
 			{
 			case 1: {//房源信息
 				struct House houses[MAX_NUM];
-				interface_house_info(houses);
+				struct Agency agencys[MAX_NUM];
+				interface_house_info(houses,agencys);
 				goto label_6;
 				break;
 			}
@@ -319,7 +306,8 @@ void interface_info()
 	printf("\t\033[31m=================================\n");
 	printf("\t|\t    登陆成功\t\t|\n");
 	printf("\t=================================\n");
-	printf("\t\033[36m1.房源信息\n\t---------------------------------\n");
+	printf("\t\033[36m1.房屋信息\n\t---------------------------------\n");
 	printf("\t2.预约信息\n\t---------------------------------\n");
+	printf("\t3.返回\n\t---------------------------------\n");
 	printf("\033[37m\t");
 }

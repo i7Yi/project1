@@ -1,6 +1,4 @@
 #include "account.h"
-#include "house_info.h"
-#include "UI.h"
 
 AC* head = NULL;
 void sign_in() // 注册
@@ -220,29 +218,27 @@ int Delete() {//删除
 				fprintf(fp, "%s %s %s %s\n", ac[k].userName1, ac[k].passWorld1,ac[k].name,ac[k].phone);
 			}
 			fclose(fp);
-			printf("\t删除成功！按任意键继续\n");
+			printf("\t\033[31m删除成功！按任意键继续\n");
 			getchar();
 			getchar();
 		}
 		else {
-			printf("\t未找到要删除的用户名,按任意键继续\n");
+			printf("\t\033[31m未找到要删除的用户名,按任意键继续\n");
 			getchar(); // 读取上一个 scanf() 中剩余的换行符
 			getchar(); // 等待用户按下任意键继续
 		}
 	}
 	else {
-		printf("\t账号信息为空，按任意键继续\n");
-		getchar(); // 读取上一个 scanf() 中剩余的换行符
-		getchar(); // 等待用户按下任意键继续
+		printf("\t\033[31m账号信息为空，按任意键继续\n");
+		getchar();
 
 	}
 }
-void modify()//管理员重置密码
+void modify_reset()//管理员重置密码
 {
-	FILE* fp;
-	AC ac[100];
+	FILE* fp = fopen("enter.txt", "rt");
+	AC ac[1000];
 	int n = 0;
-	fp = fopen("enter.txt", "rt");
 	display_info(fp, &n, ac);
 	char flag[5];
 	if (n > 0)
@@ -297,9 +293,10 @@ label_2:
 				}
 				}
 			}
-		}else
-		{
-			printf("\t->未找到相匹配的用户名<-\n");
+		}
+		else {
+			printf("\t\033[31m未找到要删除的用户名,按任意键继续\n");
+			getchar();
 		}
 	}
 }
@@ -395,7 +392,6 @@ void loadAccount(AC acc[], int* count, FILE* fp) {
 
 	}
 }
-
 void saveAccount(AC acc[], int count, FILE* fp)
 {
 	int i;
@@ -409,4 +405,52 @@ void saveAccount(AC acc[], int count, FILE* fp)
 	fprintf(fp, "%s ", acc[i].passWorld1);
 	fprintf(fp, "%s ", acc[i].name);
 	fprintf(fp, "%s", acc[i].phone);
+}
+void code()
+{
+	FILE* f = fopen("code.txt", "r");
+	if (f == NULL)
+	{
+		printf("\t\033[031m权限码不存在！自动尝试恢复！");
+		Sleep(1000);
+		exit(0);
+	}
+	printf("\t\033[36m请输入权限码:");
+	printf("\033[37m");
+	char code[10];
+	char code1[10];
+	fscanf(f, "%s", code1);
+	while(1)
+	{
+		scanf("%s", code);
+		if (!strcmp(code, code1))
+		{
+			printf("\t\033[31m权限验证成功!\n");
+			Sleep(500);
+			return;
+		}
+		else
+		{
+			printf("\t\033[31m权限码错误!\n");
+			printf("\t\033[36m1.再试一次\t2.返回菜单\n");
+			printf("\t\033[37m");
+			int judge;
+			scanf("%d", &judge);
+			switch (judge)
+			{
+			case 1: {
+				printf("\t\033[36m请输入权限码:");
+				break;
+			}
+			case 2: {
+				enter();
+			}
+			default:
+				printf("\t\033[36m无效指令，按任意键继续");
+				printf("\033[37m");
+				getchar();
+				return;
+			}
+		}
+	}	
 }
