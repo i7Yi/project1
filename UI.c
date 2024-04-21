@@ -206,8 +206,8 @@ void enter()		//登录界面
 				break;
 			}
 			case 2: {//预约信息
-				struct Reservation reservations[MAX_NUM];
-				interface_reservation(reservations);
+				struct Reservation* head = NULL;
+				interface_reservation(head);
 				goto label_5;
 				break;
 			}
@@ -234,7 +234,8 @@ void enter()		//登录界面
 		break;
 	}
 	case 3: { //租客
-		enter_user();
+		char name[20];
+		enter_zk(name);
 	label_6:
 		system("cls");
 		printf("\t\033[31m=================================\n");
@@ -262,8 +263,8 @@ void enter()		//登录界面
 				break;
 			}
 			case 2: {//预约信息
-				struct Reservation reservations[MAX_NUM];
-				interface_reservation(reservations);
+				struct Reservation* head = NULL;
+				interface_reservation_user(head,name);
 				goto label_6;
 				break;
 			}

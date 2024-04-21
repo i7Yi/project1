@@ -13,6 +13,7 @@ void sign_in();
 int Delete();
 void modify_reset();
 void enter_user();
+void enter_zk(char name[]);
 void loadAccount(AC acc[], int* count, FILE* fp);
 void saveAccount(AC acc[], int count, FILE* fp);
 void display_info(FILE* fp, int* n, AC ac[1000]);
