@@ -36,6 +36,9 @@
     <ClCompile Include="datarecovery.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="rent_info.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -54,6 +57,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="agency_info.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="rent_info.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

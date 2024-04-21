@@ -2,9 +2,8 @@
 
 void interface_reservation(struct Reservation *head)
 {//信息管理子界面
-    FILE* file = fopen("reservation_info.txt", "r");
+    FILE* file = fopen("reservation_info.txt", "a+");
     char filename[] = "reservation_info.txt";
-    head = loadListFromFile(head,file);
     if (file == NULL) {
         printf("reservation_info.txt不存在，正在创建新文件...\n");
         file = fopen("reservation_info.txt", "w");
@@ -18,6 +17,7 @@ void interface_reservation(struct Reservation *head)
             exit(0);
         }
     }
+    head = loadListFromFile(head, file);
     char command[20];
 
     while (1) {
@@ -58,6 +58,7 @@ void interface_reservation(struct Reservation *head)
         }
         else if (strcmp(command, "6") == 0)
         {
+            freeList(head);
             break;
         }
         else {
@@ -124,6 +125,7 @@ void interface_reservation_user(struct Reservation* head,const char name[])
         }
         else if (strcmp(command, "6") == 0)
         {
+            freeList(head);
             break;
         }
         else {

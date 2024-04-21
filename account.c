@@ -214,9 +214,11 @@ int Delete() {//删除
 				printf("\t打开文件失败\n");
 				exit(1);
 			}
-			for (int k = 0; k < n; k++) {
+			int k;
+			for (k = 0; k < n-1; k++) {
 				fprintf(fp, "%s %s %s %s\n", ac[k].userName1, ac[k].passWorld1,ac[k].name,ac[k].phone);
 			}
+			fprintf(fp, "%s %s %s %s", ac[k].userName1, ac[k].passWorld1, ac[k].name, ac[k].phone);
 			fclose(fp);
 			printf("\t\033[31m删除成功！按任意键继续\n");
 			getchar();

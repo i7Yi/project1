@@ -4,6 +4,7 @@
 #include "datarecovery.h"
 #include "account.h"
 #include "agency_info.h"
+#include "rent_info.h"
 
 void enter()		//登录界面
 {
@@ -185,7 +186,8 @@ void enter()		//登录界面
 		printf("\t|\t 中介登陆成功！:\t|\n");
 		printf("\t=================================\n");
 		printf("\t\033[36m1.信息查询\n\t---------------------------------\n");
-		printf("\t2.退出登录\n\t---------------------------------\n");
+		printf("\t2.租房\n\t---------------------------------\n");
+		printf("\t3.退出登录\n\t---------------------------------\n");
 		int j;
 		printf("\033[37m\t");
 		scanf("%d", &j);
@@ -219,6 +221,13 @@ void enter()		//登录界面
 
 		}
 		case 2: {
+			system("cls");
+			struct RentalInformation* head2 = NULL;
+			interface_rent(head2);
+			goto label_5;
+			break;
+		}
+		case 3: {
 			system("cls");
 			enter();
 			break;

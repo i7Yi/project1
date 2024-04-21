@@ -132,6 +132,7 @@
     <ClCompile Include="datarecovery.c" />
     <ClCompile Include="house_info.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="rent_info.c" />
     <ClCompile Include="reservation.c" />
     <ClCompile Include="UI.c" />
   </ItemGroup>
@@ -140,6 +141,7 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="datarecovery.h" />
     <ClInclude Include="house_info.h" />
+    <ClInclude Include="rent_info.h" />
     <ClInclude Include="reservation.h" />
     <ClInclude Include="UI.h" />
   </ItemGroup>
