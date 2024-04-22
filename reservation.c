@@ -88,6 +88,7 @@ void interface_reservation_user(struct Reservation* head,const char name[])
     char command[20];
 
     while (1) {
+        system("cls");
         printf("\t\033[31m=================================\n");
         printf("\t|\t    请输入指令:\t\t|\n");
         printf("\t=================================\n");
@@ -101,13 +102,18 @@ void interface_reservation_user(struct Reservation* head,const char name[])
         scanf("%s", command);
         if (strcmp(command, "1") == 0)
         {
+            system("cls");
             printList_user(head,name);
+            printf("\t按任意键继续！");
+            getchar();
+            getchar();
         }
         else if (strcmp(command, "2") == 0) {
             printf("\t\033[31m输入要查找的租房编号: ");
             int roomHouse;
             printf("\033[37m");
             scanf("%d", &roomHouse);
+            system("cls");
             searchByRoomHouse(head, roomHouse);
         }
         else if (strcmp(command, "3") == 0) {
@@ -116,6 +122,7 @@ void interface_reservation_user(struct Reservation* head,const char name[])
         else if (strcmp(command, "4") == 0) {
             saveListToFile(head, "reservation_info.txt");
             printf("预约信息保存成功.\n");
+            Sleep(1000);
         }
         else if (strcmp(command, "5") == 0) {
             int roomHouse;
@@ -140,12 +147,17 @@ void printList(struct Reservation* head) {
         printf("文件中无预约信息\n");
         return;
     }
-
-    printf("预约信息:\n");
+    system("cls");
+    printf("\t\033[31m预约信息:\n");
+    printf("\033[36m");
     while (current != NULL) {
         printReserve(current);
         current = current->next;
     }
+    printf("\n\t按任意键返回！\n");
+    getchar();
+    getchar();
+    system("cls");
 }
 //租客打印
 void printList_user(struct Reservation* head,const char name[]) {
@@ -164,23 +176,23 @@ void printList_user(struct Reservation* head,const char name[]) {
 
 // 展示房间信息
 void printReserve(struct Reservation* reserve) {
-    printf("租房编号: %d\n", reserve->roomHouse);
-    printf("看房时间: %s\n", reserve->date);
-    printf("租客姓名: %s\n", reserve->TenantName);
-    printf("中介姓名: %s\n", reserve->IntermediaryName);
-    printf("看房时间: %s\n", reserve->time);
-    printf("租客反馈: %s\n", reserve->evaluation);
+    printf("\t\033[36m租房编号: %d\n", reserve->roomHouse);
+    printf("\t看房时间: %s\n", reserve->date);
+    printf("\t租客姓名: %s\n", reserve->TenantName);
+    printf("\t中介姓名: %s\n", reserve->IntermediaryName);
+    printf("\t看房时间: %s\n", reserve->time);
+    printf("\t租客反馈: %s\n", reserve->evaluation);
     printf("\n");
 }
 void printReserve_user(struct Reservation* reserve,char name[]) {
     if (strcmp(name, reserve->TenantName) == 0)
     {
-        printf("租房编号: %d\n", reserve->roomHouse);
-        printf("看房时间: %s\n", reserve->date);
-        printf("租客姓名: %s\n", reserve->TenantName);
-        printf("中介姓名: %s\n", reserve->IntermediaryName);
-        printf("看房时间: %s\n", reserve->time);
-        printf("租客反馈: %s\n", reserve->evaluation);
+        printf("\t\033[36m租房编号: %d\n", reserve->roomHouse);
+        printf("\t看房时间: %s\n", reserve->date);
+        printf("\t租客姓名: %s\n", reserve->TenantName);
+        printf("\t中介姓名: %s\n", reserve->IntermediaryName);
+        printf("\t看房时间: %s\n", reserve->time);
+        printf("\t租客反馈: %s\n", reserve->evaluation);
         printf("\n");
     }
 }
@@ -222,22 +234,24 @@ void modifyReserve(struct Reservation* head, int roomHouse) {
     struct Reservation* current = head;
     while (current != NULL) {
         if (current->roomHouse == roomHouse) {
-            printf("请输入新的看房日期: ");
+            printf("\t请输入新的看房日期: ");
             scanf("%s", current->date);
-            printf("请输入新的租客姓名: ");
+            printf("\t请输入新的租客姓名: ");
             scanf("%s", current->TenantName);
-            printf("请输入新的中介姓名: ");
+            printf("\t请输入新的中介姓名: ");
             scanf("%s", current->IntermediaryName);
-            printf("请输入新的看房时长: ");
+            printf("\t请输入新的看房时长: ");
             scanf("%s", current->time);
-            printf("请输入新的看房反馈: ");
+            printf("\t请输入新的看房反馈: ");
             scanf("%s", current->evaluation);
-            printf("预约信息更新成功.\n");
+            printf("\t预约信息更新成功.\n");
+            Sleep(1000);
             return;
         }
         current = current->next;
     }
     printf("\t房间不存在！\n");
+    Sleep(1000);
 }
 
 // 添加预约信息
@@ -248,20 +262,22 @@ struct Reservation* addReserve(struct Reservation* head) {
         return head;
     }
 
-    printf("请输入房屋编号: ");
+    printf("\t请输入房屋编号: ");
     scanf("%d", &newReserve->roomHouse);
-    printf("请输入看房日期: ");
+    printf("\t请输入看房日期: ");
     scanf("%s", newReserve->date);
-    printf("请输入租客姓名: ");
+    printf("\t请输入租客姓名: ");
     scanf("%s", newReserve->TenantName);
-    printf("请输入中介姓名: ");
+    printf("\t请输入中介姓名: ");
     scanf("%s", newReserve->IntermediaryName);
-    printf("请输入看房时长: ");
+    printf("\t请输入看房时长: ");
     scanf("%s", newReserve->time);
-    printf("请输入看房反馈: ");
+    printf("\t请输入看房反馈: ");
     scanf("%s", newReserve->evaluation);
 
     newReserve->next = head;
+    printf("\t添加成功！");
+    Sleep(1000);
     return newReserve;
 }
 
@@ -270,25 +286,30 @@ void searchByRoomHouse(struct Reservation* head, int roomHouse) {
     struct Reservation* current = head;
     while (current != NULL) {
         if (current->roomHouse == roomHouse) {
-            printf("预约信息:\n");
+            printf("\t\033[36m预约信息:\n");
             printReserve(current);
-            return;
         }
         current = current->next;
     }
-    printf("未找到房屋信息.\n");
+    printf("\n\t按任意键继续!");
+    getchar();
+    getchar();
+    return;
+    printf("\t\033[31m未找到房屋信息.\n");
+    Sleep(1000);
 }
 void searchByuserName(struct Reservation* head,const char name[]) {
     struct Reservation* current = head;
     while (current != NULL) {
         if (current->TenantName == name) {
-            printf("预约信息:\n");
+            printf("\t\033[36m预约信息:\n");
             printReserve(current);
             return;
         }
         current = current->next;
     }
-    printf("未找到房屋信息.\n");
+    printf("\t未找到房屋信息.\n");
+    system(1000);
 }
 void freeList(struct Reservation* head) {
     struct Reservation* current = head;

@@ -3,5 +3,6 @@
 #include "account.h"
 #include "house_info.h"
 #include "reservation.h"
-void data_backup(struct House house[], struct Reservation* head,AC acc[]);
-void recovery(struct House house[], struct Reservation* head,AC acc[]);
+#include "rent_info.h"
+void data_backup(struct House house[], struct Reservation* head,AC accs[], struct RentalInformation* head2);
+void recovery(struct House house[], struct Reservation* head,AC accs[],struct RentalInformation* head2);

@@ -302,7 +302,7 @@ label_2:
 		}
 	}
 }
-void enter_user()
+void enter_zj(char zj_name[])
 {
 	FILE* fp;
 	AC ac[100];
@@ -313,7 +313,7 @@ void enter_user()
 		getchar();
 		exit(1);
 	}
-	while (fscanf(fp, "%s %s", ac[n].userName1, ac[n].passWorld1) == 2) {
+	while (fscanf(fp, "%s %s %s %s", ac[n].userName1, ac[n].passWorld1, ac[n].name, ac[n].phone) == 4) {
 		n++;
 	}
 	fclose(fp);
@@ -337,6 +337,7 @@ label_3:
 		scanf("%s", ch);
 		if (strcmp(ch, ac[i].passWorld1) == 0)
 		{
+			strcpy(zj_name, ac[i].name);
 			return;
 		}
 		else
@@ -368,7 +369,8 @@ label_3:
 		printf("\t\033[37m");
 		getchar();
 		getchar();
-		goto label_3;
+		system("cls");
+		enter();
 	}
 }
 void enter_zk(char name[])
@@ -437,8 +439,8 @@ label_3:
 		printf("\t按任意键继续");
 		printf("\t\033[37m");
 		getchar();
-		getchar();
-		goto label_3;
+		system("cls");
+		enter();
 	}
 }
 
@@ -476,13 +478,14 @@ void saveAccount(AC acc[], int count, FILE* fp)
 	fprintf(fp, "%s ", acc[i].passWorld1);
 	fprintf(fp, "%s ", acc[i].name);
 	fprintf(fp, "%s", acc[i].phone);
+	fclose(fp);
 }
 void code()
 {
 	FILE* f = fopen("code.txt", "r");
 	if (f == NULL)
 	{
-		printf("\t\033[031m权限码不存在！自动尝试恢复！");
+		printf("\t\033[031m权限码不存在！自动尝试恢复！");////
 		Sleep(1000);
 		exit(0);
 	}
@@ -497,7 +500,7 @@ void code()
 		if (!strcmp(code, code1))
 		{
 			printf("\t\033[31m权限验证成功!\n");
-			Sleep(500);
+			Sleep(300);
 			return;
 		}
 		else
@@ -524,4 +527,42 @@ void code()
 			}
 		}
 	}	
+}
+
+void modify_code(int *judge)//管理员修改权限码
+{
+	printf("\t\033[31m请输入新的权限码:");
+	char newCode[10];
+	scanf("%s", newCode);
+	int judge_code_modofy;
+	while (1)
+	{
+		printf("\t确认修改新的权限码 %s 吗？\n", newCode);
+		printf("\t\033[36m1.确认\t2.放弃修改\n");
+		printf("\t\033[37m");
+		scanf("%d", &judge_code_modofy);
+		if (judge_code_modofy == 1)
+		{
+			FILE* fp = fopen("code.txt", "w");
+			fprintf(fp, "%s", newCode);
+			printf("\t\033[36m修改成功！");
+			Sleep(500);
+			fclose(fp);
+			system("cls");
+			enter();
+			break;
+		}
+		else if (judge_code_modofy == 2)
+		{
+			system("cls");
+			*judge = 1;
+			break;
+		}
+		else
+		{
+			printf("\t无效指令！请重新输入！");
+			Sleep(1000);
+			system("cls");
+		}
+	}
 }

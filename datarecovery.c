@@ -1,5 +1,5 @@
 #include "datarecovery.h"
-void data_backup(struct House houses[MAX_NUM], struct Reservation* head,AC accs[])
+void data_backup(struct House houses[MAX_NUM], struct Reservation* head,AC accs[], struct RentalInformation* head2)
 {
     int count = 0;
     FILE* fp;
@@ -95,7 +95,32 @@ void data_backup(struct House houses[MAX_NUM], struct Reservation* head,AC accs[
     {
         fprintf(fp, "%s", code1);
         fclose(fp);
-        printf("\t\033[36mCode备份成功！按任意键继续\n");
+        printf("\t\033[36mCode备份成功!\n");
+    }
+    else
+    {
+        printf("\t\033[31mError!系统将在3秒内终止！\n");
+        Sleep(3000);
+        exit(0);
+    }
+    //rent_info
+    fp = fopen("rent_info.txt", "r");
+    if (fp != NULL) {
+        head2 = loadListFromFile2(head2, fp);
+        fclose(fp);
+    }
+    else
+    {
+        printf("\t源文件不存在！rent_info备份失败 按任意键继续");
+        getchar();
+        return;
+    }
+    fp = fopen("Recovery/Rent_info_r.txt", "w");
+    if (fp != NULL)
+    {
+        saveListToFile2(head2, "Recovery/Rent_info_r.txt");
+        fclose(fp);
+        printf("\t\033[36mrent_info备份成功！\n按任意键继续\n");
         getchar();
         getchar();
     }
@@ -107,7 +132,7 @@ void data_backup(struct House houses[MAX_NUM], struct Reservation* head,AC accs[
     }
 }
 
-void recovery(struct House houses[MAX_NUM], struct Reservation **head,AC accs[])
+void recovery(struct House houses[MAX_NUM], struct Reservation **head,AC accs[], struct RentalInformation* head2)
 {
     int count = 0;
     FILE* fp;
@@ -168,7 +193,7 @@ void recovery(struct House houses[MAX_NUM], struct Reservation **head,AC accs[])
     }
     else
     {
-        printf("\t备份文件不存在！恢复失败 按任意键继续");
+        printf("\t源文件不存在！恢复失败 按任意键继续");
         getchar();
         return;
     }
@@ -203,14 +228,39 @@ void recovery(struct House houses[MAX_NUM], struct Reservation **head,AC accs[])
     {
         fprintf(fp, "%s", code1);
         fclose(fp);
-        printf("\t\033[36mCode恢复成功！按任意键继续\n");
+        printf("\t\033[36mCode恢复成功！\n");
+    }
+    else
+    {
+        printf("\t\033[31mError!系统将在3秒内终止！\n");
+        printf("\033[37m");
+        Sleep(3000);
+        exit(0);
+    }
+    //rent_info
+    fp = fopen("Recovery/Rent_info_r.txt", "r");
+    if (fp != NULL) {
+        head2 = loadListFromFile2(head2, fp);
+        fclose(fp);
+    }
+    else
+    {
+        printf("\t源文件不存在！rent_info恢复失败 按任意键继续");
+        getchar();
+        return;
+    }
+    fp = fopen("rent_info.txt", "w");
+    if (fp != NULL)
+    {
+        saveListToFile2(head2, "rent_info.txt");
+        fclose(fp);
+        printf("\t\033[36mrent_info恢复成功！\n按任意键继续\n");
         getchar();
         getchar();
     }
     else
     {
         printf("\t\033[31mError!系统将在3秒内终止！\n");
-        printf("\033[37m");
         Sleep(3000);
         exit(0);
     }

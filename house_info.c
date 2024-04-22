@@ -135,10 +135,14 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
                         printf("租房信息已保存!\n");
                         break;
                     }
-                    else
-                    {
-                        printf("\t无效指令请重新输入！\n");
-                    }
+                else if (strcmp(command_second, "3") == 0)
+                {
+                        break;
+                }
+                else
+                {
+                    printf("\t无效指令请重新输入！\n");
+                }
                 }
             }
         }

@@ -69,24 +69,25 @@ void interface_rent(struct RentalInformation* head)
 }
 // 打印单个预约信息
 void printRental(struct RentalInformation* rental) {
-    printf("租房编号: %d\n", rental->roomHouse);
-    printf("租客姓名: %s\n", rental->TenantName);
-    printf("中介姓名: %s\n", rental->IntermediaryName);
-    printf("合同签订日期·: %s\n", rental->ContractDate);
-    printf("出租开始日期: %s\n", rental->Rentaldate);
-    printf("预计出租时长: %s\n", rental->EstimatedRentalDuration);
-    printf("\n");
+    printf("\t\033[36m房屋编号: %d\n", rental->roomHouse);
+    printf("\t租客姓名: %s\n", rental->TenantName);
+    printf("\t中介姓名: %s\n", rental->IntermediaryName);
+    printf("\t合同签订日期·: %s\n", rental->ContractDate);
+    printf("\t出租开始日期: %s\n", rental->Rentaldate);
+    printf("\t预计出租时长: %s\n", rental->EstimatedRentalDuration);
+    printf("\033[37m\n");
 }
 
 // 打印整个链表
 void printList2(struct RentalInformation* head) {
     struct RentalInformation* current = head;
+    printf("\033[36m");
     if (current == NULL) {
-        printf("文件中无租房信息\n");
+        printf("\t文件中无租房信息\n");
         return;
     }
 
-    printf("租房信息:\n");
+    printf("\t租房信息:\n");
     while (current != NULL) {
         printRental(current);
         current = current->next;
@@ -135,17 +136,17 @@ struct RentalInformation* addRental(struct RentalInformation* head) {
         return head;
     }
 
-    printf("请输入房屋编号: ");
+    printf("\t请输入房屋编号: ");
     scanf("%d", &newRental->roomHouse);
-    printf("请输入租客姓名: ");
+    printf("\t请输入租客姓名: ");
     scanf("%s", newRental->TenantName);
-    printf("请输入中介姓名: ");
+    printf("\t请输入中介姓名: ");
     scanf("%s", newRental->IntermediaryName);
-    printf("请输入合同签订日期·: ");
+    printf("\t请输入合同签订日期·: ");
     scanf("%s", newRental->ContractDate);
-    printf("请输入租房开始时间: ");
+    printf("\t请输入租房开始时间: ");
     scanf("%s", newRental->Rentaldate);
-    printf("请输入预计租房时间: ");
+    printf("\t请输入预计租房时间: ");
     scanf("%s", newRental->EstimatedRentalDuration);
 
     newRental->next = head;
@@ -157,17 +158,17 @@ void modifyRental(struct RentalInformation* head, int roomHouse) {
     struct RentalInformation* current = head;
     while (current != NULL) {
         if (current->roomHouse == roomHouse) {
-            printf("请输入新的租客姓名: ");
+            printf("\t请输入新的租客姓名: ");
             scanf("%s", current->TenantName);
-            printf("请输入新的中介姓名: ");
+            printf("\t请输入新的中介姓名: ");
             scanf("%s", current->IntermediaryName);
-            printf("请输入新的合同签订日期: ");
+            printf("\t请输入新的合同签订日期: ");
             scanf("%s", current->ContractDate);
-            printf("请输入新的租房开始日期: ");
+            printf("\t请输入新的租房开始日期: ");
             scanf("%s", current->Rentaldate);
-            printf("请输入新的预计租房时间: ");
+            printf("\t请输入新的预计租房时间: ");
             scanf("%s", current->EstimatedRentalDuration);
-            printf("租房信息更新成功.\n");
+            printf("\t租房信息更新成功.\n");
             return;
         }
         current = current->next;
@@ -180,13 +181,14 @@ void searchByRoomHouse2(struct RentalInformation* head, int roomHouse) {
     struct RentalInformation* current = head;
     while (current != NULL) {
         if (current->roomHouse == roomHouse) {
-            printf("租房信息:\n");
+            printf("\t\033[36m租房信息:\n");
             printRental(current);
             return;
         }
         current = current->next;
     }
-    printf("未找到房屋信息.\n");
+    printf("\t\033[31m未找到房屋信息.\n");
+    printf("\033[37m");
 }
 void freeList2(struct RentalInformation* head) {
     struct RentalInformation* current = head;
