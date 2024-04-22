@@ -1,6 +1,10 @@
 #include "rent_info.h"
+#include "house_info.h"
+#include "agency_info.h"
 
-void interface_rent(struct RentalInformation* head)
+int houseCount_rent = 0;
+int agencyCount_rent = 0;
+void interface_rent(struct RentalInformation* head, struct House houses_rent[MAX_NUM], struct Agency agencys_rent[MAX_NUM])
 {//租房子界面
     FILE* file = fopen("rent_info.txt", "a+");
     char filename[] = "rent_info.txt";
@@ -45,7 +49,7 @@ void interface_rent(struct RentalInformation* head)
         }
         else if (strcmp(command, "3") == 0) {
             system("cls");
-            head = addRental(head);
+            head = addRental(head,houses_rent,agencys_rent);
         }
         else if (strcmp(command, "4") == 0) {
             saveListToFile2(head, "rent_info.txt");
@@ -129,13 +133,46 @@ void saveListToFile2(struct RentalInformation* head, const char* filename) {
 }
 
 // 添加租房信息
-struct RentalInformation* addRental(struct RentalInformation* head) {
+struct RentalInformation* addRental(struct RentalInformation* head, struct House houses[MAX_NUM], struct Agency agencys[MAX_NUM]) {
     struct RentalInformation* newRental = (struct RentalInformation*)malloc(sizeof(struct RentalInformation));
     if (newRental == NULL) {
         printf("保存信息失败。\n");
         return head;
     }
-
+    FILE* file = fopen("house_info.txt", "r");
+    FILE* file_agency = fopen("Agency_info.txt", "a+");
+    if (file != NULL) {
+        loadHouseInfo(houses,&houseCount_rent, file);
+        fclose(file);
+    }
+    else {
+        printf("\t\033[31mhouse_info.txt不存在，正在创建新文件...\n");
+        file = fopen("house_info.txt", "w");
+        if (file != NULL) {
+            printf("\t新文件 house_info.txt 创建成功！\n");
+            fclose(file);
+        }
+        else {
+            printf("无法创建新文件 house_info.txt\n");
+            return;
+        }
+    }
+    if (file_agency != NULL) {
+        loadAgencyInfo(agencys, &agencyCount_rent, file_agency);
+        fclose(file_agency);
+    }
+    else {
+        printf("\t\033[31mAgency_info.txt不存在，正在创建新文件...\n");
+        file = fopen("house_info.txt", "w");
+        if (file != NULL) {
+            printf("\t新文件 Agency_info.txt 创建成功！\n");
+            fclose(file);
+        }
+        else {
+            printf("无法创建新文件 Agency_info.txt\n");
+            return;
+        }
+    }
     printf("\t请输入房屋编号: ");
     scanf("%d", &newRental->roomHouse);
     printf("\t请输入租客姓名: ");
@@ -149,9 +186,54 @@ struct RentalInformation* addRental(struct RentalInformation* head) {
     printf("\t请输入预计租房时间: ");
     scanf("%s", newRental->EstimatedRentalDuration);
 
+
+    int index = -1;
+    for (int i = 0; i < houseCount_rent; i++)
+    {
+        if (newRental->roomHouse == houses[i].roomNumber) index = i;
+    }
+    int index_a = -1;
+    char t[20];
+    strcpy(t, newRental->IntermediaryName);
+    for (int j = 0; j < agencyCount_rent; j++)
+    {
+        if (strcmp(agencys[j].name, t) == 0) index_a = j;
+    }
+
+    //*******************************
+
+    if (index_a == -1)
+    {
+        strcpy(agencys[agencyCount_rent].name, t);
+        agencys[agencyCount_rent].rent_cnt++;
+        agencyCount_rent++;
+    }
+    else
+    {
+        agencys[index_a].rent_cnt++;
+    }
+    if (index != -1)
+    {
+        houses[index].cnt++;
+        houses[index].rent_time += (int)newRental->EstimatedRentalDuration;
+    }
+    //printf("%d\n", agencyCount_rent);
+    file_agency = fopen("Agency_info.txt", "w");
+    int i;
+    for (i = 0; i < agencyCount_rent - 1; i++) {
+        fprintf(file_agency, "%s\n", agencys[i].name);
+        fprintf(file_agency, "%d\n", agencys[i].reservation_cnt);
+        fprintf(file_agency, "%d\n", agencys[i].rent_cnt);
+    }
+    fprintf(file_agency, "%s\n", agencys[i].name);
+    fprintf(file_agency, "%d\n", agencys[i].reservation_cnt);
+    fprintf(file_agency, "%d", agencys[i].rent_cnt);
+    fclose(file_agency);
+
     newRental->next = head;
     return newRental;
 }
+
 
 // 修改租房信息
 void modifyRental(struct RentalInformation* head, int roomHouse) {
