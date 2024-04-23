@@ -1,15 +1,13 @@
 #include "house_info.h"
 #include "agency_info.h"
 
+
 int houseCount = 0;
 int agencyCount = 0;
 void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX_NUM])
 {
     FILE* file = fopen("house_info.txt", "r");
-    FILE* file_rent = fopen("Rent_info.txt", "r");
     FILE* file_agency = fopen("Agency_info.txt", "r");
-    for (int i = 0; i < MAX_NUM; i++) houses[i].cnt = 0, houses[i].rent_time = 0;
-    for (int i = 0; i < MAX_NUM; i++) agencys[i].rent_cnt = 0, agencys[i].reservation_cnt = 0;
     if (file != NULL) {
         loadHouseInfo(houses, &houseCount, file);
         fclose(file);
@@ -25,6 +23,13 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
             printf("无法创建新文件 house_info.txt\n");
             return ;
         }
+    }
+    if (file_agency != NULL) {
+        loadAgencyInfo(agencys, &agencyCount, file_agency);
+        fclose(file_agency);
+    }
+    else {
+        printf("生成失败\n");
     }
 
     char command[20];
@@ -42,19 +47,58 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
         scanf("%s", command);
         getchar();
         if (strcmp(command, "1") == 0) {
-            system("cls");
-            printf("\t\033[36m当前房源数量:%d\n", houseCount);
-            printf("\t请输入要查询的房间号: ");
-            printf("\033[37m");
-            int number;
-            scanf("%d", &number);
-            int index = -1;
-            for (int i = 0; i < houseCount; i++)
+            while (1)
             {
-                if (houses[i].roomNumber == number) index = i;
-            }
-            if (index != -1) displayHouseInfo(houses[index]);
-            else printf("\t\033[36m该房间不存在\n");
+                system("cls");
+                printf("\t\033[31m=================================\n");
+                printf("\t|\t    请输入指令:\t\t|\n");
+                printf("\t=================================\n");
+                printf("\t\033[36m1.查询所有\n\t---------------------------------\n");
+                printf("\t2.房间号查询\n\t---------------------------------\n");
+                printf("\t3.返回\n\t---------------------------------\n");
+                printf("\033[37m\t");
+                printf("\t\033[36m当前房源数量:%d\n", houseCount);
+                
+                printf("\t\033[37m");
+                int command_second;
+                scanf("%d", &command_second);
+                switch (command_second)
+                {
+                case 1:
+                    for (int i = 0; i < houseCount; i++)
+                    {
+                        displayHouseInfo(houses[i]);
+                    }
+                    printf("\t按任意键继续");
+                    getchar();
+                    getchar();
+                    break;
+                case 2:
+                    printf("\t请输入要查询的房间号: ");
+                    int number;
+                    scanf("%d", &number);
+                    int index = -1;
+                    for (int i = 0; i < houseCount; i++)
+                    {
+                        if (houses[i].roomNumber == number) index = i;
+                    }
+                    if (index != -1) displayHouseInfo(houses[index]);
+                    else
+                    {
+                        printf("\t\033[36m该房间不存在\n");
+                        Sleep(1000);
+                        break;
+                    }
+                case 3:
+                    system("cls");
+                    return;
+                    break;
+                default:
+                    printf("\t\033[31m无效指令！请重新输入！");
+                    Sleep(300);
+                }
+                
+            }   
         }
         else if (strcmp(command, "3") == 0) {//录入
             system("cls");
@@ -64,8 +108,7 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
                 printf("\t|\t    请输入指令:\t\t|\n");
                 printf("\t=================================\n");
                 printf("\t\033[36m1.房源信息录入\n\t---------------------------------\n");
-                printf("\t2.租房信息录入\n\t---------------------------------\n");
-                printf("\t3.返回\n\t---------------------------------\n");
+                printf("\t2.返回\n\t---------------------------------\n");
                 printf("\033[37m\t");
                 char command_second[20];
                 scanf("%s", command_second);
@@ -81,7 +124,7 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
 
                     file = fopen("house_info.txt", "w");
                     if (file != NULL) {
-                        saveHouseInfo(houses, houseCount, file);
+                        saveHouseInfo(houses, &houseCount, file);
                         printf("房源信息已保存！\n");
                         fclose(file);
                     }
@@ -92,57 +135,11 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
                 }
                 else if (strcmp(command_second, "2") == 0)
                 {
-                    /*录入的过程同时会增加房屋的租房次数和中介的租房次数*******/
-
-                    int number;
-                    printf("请输入房间号:\n");
-                    scanf("%d", &number);
-                    int index = -1;
-                    for (int i = 0; i < houseCount; i++)
-                    {
-                        if (number == houses[i].roomNumber) index = i;
-                    }
-                    if (index != -1)
-                    {
-                        printf("请输入中介姓名:");
-                        char t[20];
-                        scanf("%s", t);
-                        int index_a = -1;
-                        for (int j = 0; j < agencyCount; j++)
-                        {
-                            if (strcmp(agencys[j].name, t) == 0) index_a = j;
-                        }
-                        if (index_a == -1)
-                        {
-                            strcpy(agencys[agencyCount].name, t);
-                            agencys[agencyCount].rent_cnt++;
-                        }
-                        else
-                        {
-                            agencys[index_a].rent_cnt++;
-                        }
-                        agencyCount++;
-
-                        file_agency = fopen("Agency_info.txt", "w");
-
-                        saveAgencyInfo(agencys, agencyCount, file_agency);
-                        fclose(file_agency);
-
-                        file_rent = fopen("Rent_info.txt", "w");
-                        modifyRentInfo(&houses[index]);
-                        saveRentInfo(houses, houseCount, file_rent);
-                        fclose(file_rent);
-                        printf("租房信息已保存!\n");
-                        break;
-                    }
-                else if (strcmp(command_second, "3") == 0)
-                {
                         break;
                 }
                 else
                 {
                     printf("\t无效指令请重新输入！\n");
-                }
                 }
             }
         }
@@ -199,6 +196,8 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
         }
         else if (strcmp(command, "4") == 0)
         {
+            int houseCount_rent = 0;
+
             char commmand_sta[20];
             while (1)
             {
@@ -432,16 +431,6 @@ void statistic_house(struct House house[], int count)
         }
     }
 }
-void saveAgencyInfo(struct Agency agency[], int count, FILE* file)
-{
-    for (int i = 0; i < count; i++)
-    {
-        fprintf(file, "%s\n", agency[i].name);
-        fprintf(file, "%d\n", agency[i].reservation_cnt);
-        if (i == count - 1) fprintf(file, "%d", agency[i].rent_cnt);
-        else fprintf(file, "%d\n", agency[i].rent_cnt);
-    }
-}
 void loadAgencyInfo(struct Agency agency[], int* count, FILE* file)
 {
     *count = 0;
@@ -460,20 +449,20 @@ void loadAgencyInfo(struct Agency agency[], int* count, FILE* file)
         (*count)++;
     }
 }
-void statistic_agency(struct Agency agency[], int count)
-{
-    for (int i = 0; i < count; i++)
-    {
-        struct Agency t = agency[i];
+void statistic_agency(struct Agency agency[], int count) {
 
-        if (t.reservation_cnt == 0)
-        {
+    for (int i = 0; i < count; i++) {
+        if (agency[i].reservation_cnt == 0) {
             continue;
         }
-        printf("中介的姓名:%s\n", t.name);
-        printf("中介的预约次数:%d\n", t.reservation_cnt);
-        printf("中介的成功租房次数:%d\n", t.rent_cnt);
-        double a = t.rent_cnt / (1.0 * t.reservation_cnt);
-        printf("中介的出租率:%.2f\n\n", a);
+        printf("中介的姓名: %s\n", agency[i].name);
+        printf("中介的预约次数: %d\n", agency[i].reservation_cnt);
+        printf("中介的成功租房次数: %d\n", agency[i].rent_cnt);
+        double rate = (double)agency[i].rent_cnt / agency[i].reservation_cnt;
+        printf("中介的出租率: %.2f\n\n", rate);
     }
+
+    printf("按任意键继续\n");
+    getchar();
+    getchar();
 }

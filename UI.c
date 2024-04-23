@@ -6,8 +6,13 @@
 #include "agency_info.h"
 #include "rent_info.h"
 
+struct House houses[MAX_NUM];
+struct Agency agencys[MAX_NUM];
+
 void enter()		//登录界面
 {
+	for (int i = 0; i < MAX_NUM; i++) houses[i].cnt = 0, houses[i].rent_time = 0;
+	for (int i = 0; i < MAX_NUM; i++) agencys[i].rent_cnt = 0, agencys[i].reservation_cnt = 0;
 	printf("\t\033[31m=================================\n");
 	printf("\t|\t      登录:\t\t|\n");
 	printf("\t=================================\n");
@@ -112,8 +117,6 @@ void enter()		//登录界面
 				scanf("%d", &j_info);
 				if (j_info == 1)
 				{
-					struct House houses[MAX_NUM];
-					struct Agency agencys[MAX_NUM];
 					interface_house_info(houses, agencys);
 					goto label_1;
 					break;
@@ -121,7 +124,7 @@ void enter()		//登录界面
 				else if (j_info == 2)
 				{
 					struct Reservation* head = NULL;
-					interface_reservation(head);
+					interface_reservation(head,agencys,houses);
 					goto label_1;
 					break;
 				}
@@ -217,15 +220,13 @@ void enter()		//登录界面
 			switch (j_info)
 			{
 			case 1: {//房源信息
-				struct House houses[MAX_NUM];
-				struct Agency agencys[MAX_NUM];
 				interface_house_info(houses,agencys);
 				goto label_5;
 				break;
 			}
 			case 2: {//预约信息
 				struct Reservation* head = NULL;
-				interface_reservation(head);
+				interface_reservation(head,agencys,houses);
 				goto label_5;
 				break;
 			}
@@ -236,10 +237,10 @@ void enter()		//登录界面
 			}
 
 		}
-		case 2: {
+		case 2: {//租房
 			system("cls");
 			struct RentalInformation* head2 = NULL;
-			interface_rent(head2);
+			interface_rent(head2,houses,agencys);
 			goto label_5;
 			break;
 		}
@@ -283,13 +284,13 @@ void enter()		//登录界面
 			case 1: {//房源信息
 				struct House houses[MAX_NUM];
 				struct Agency agencys[MAX_NUM];
-				interface_house_info(houses,agencys);
+				interface_house_info(houses,agencys,houses);
 				goto label_6;
 				break;
 			}
 			case 2: {//预约信息
 				struct Reservation* head = NULL;
-				interface_reservation_user(head,zk_name);
+				interface_reservation_user(head,zk_name,agencys,houses);
 				goto label_6;
 				break;
 			}

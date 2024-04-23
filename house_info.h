@@ -28,6 +28,5 @@ void modifyRentInfo(struct House* house);
 void saveRentInfo(struct House house[], int count, FILE* file);
 void loadRentInfo(struct House house[], int* count, FILE* file);
 void statistic_house(struct House house[], int count);
-void saveAgencyInfo(struct Agency agency[], int count, FILE* file);
 void loadAgencyInfo(struct Agency agency[], int* count, FILE* file);
 void statistic_agency(struct Agency agency[], int count);

@@ -49,7 +49,7 @@ void interface_rent(struct RentalInformation* head, struct House houses_rent[MAX
         }
         else if (strcmp(command, "3") == 0) {
             system("cls");
-            head = addRental(head,houses_rent,agencys_rent);
+            head = addRental(head, houses_rent, agencys_rent);
         }
         else if (strcmp(command, "4") == 0) {
             saveListToFile2(head, "rent_info.txt");
@@ -140,9 +140,9 @@ struct RentalInformation* addRental(struct RentalInformation* head, struct House
         return head;
     }
     FILE* file = fopen("house_info.txt", "r");
-    FILE* file_agency = fopen("Agency_info.txt", "a+");
+    FILE* file_agency = fopen("Agency_info.txt", "r");
     if (file != NULL) {
-        loadHouseInfo(houses,&houseCount_rent, file);
+        loadHouseInfo(houses, &houseCount_rent, file);
         fclose(file);
     }
     else {
@@ -163,7 +163,7 @@ struct RentalInformation* addRental(struct RentalInformation* head, struct House
     }
     else {
         printf("\t\033[31mAgency_info.txt不存在，正在创建新文件...\n");
-        file = fopen("house_info.txt", "w");
+        file = fopen("Agency_info.txt", "w");
         if (file != NULL) {
             printf("\t新文件 Agency_info.txt 创建成功！\n");
             fclose(file);

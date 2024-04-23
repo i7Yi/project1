@@ -22,7 +22,7 @@ void sign_in() // 注册
 		printf("\t用户名:");
 		scanf("%s", userName);
 		getchar();
-		while (fscanf(fp, "%s %s %s %s", userName1, passWorld1,name1,phone1) == 4)
+		while (fscanf(fp, "%s %s %s %s ", userName1, passWorld1,name1,phone1) == 4)
 		{
 			if (!strcmp(userName, userName1))
 			{
@@ -31,8 +31,6 @@ void sign_in() // 注册
 				break;
 			}
 		}
-
-
 
 		if (flag == 1)
 		{
@@ -81,6 +79,7 @@ void sign_in() // 注册
 			fprintf(fp, "%s %s %s %s", userName, passWorld,name1,phone1);
 			fclose(fp); // 关闭文件
 			getchar();
+			system("cls");
 			break;
 		}
 	}
