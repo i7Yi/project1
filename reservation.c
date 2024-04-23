@@ -109,6 +109,8 @@ void interface_reservation_user(struct Reservation* head, const char name[], str
         if (strcmp(command, "1") == 0)
         {
             system("cls");
+            FILE* file = fopen("reservation_info.txt", "r");
+            loadListFromFile(head,file);
             printList_user(head, name);
             printf("\t按任意键继续！");
             getchar();
@@ -368,20 +370,29 @@ struct Reservation* addReserve(struct Reservation* head, struct Agency agencys[M
 
 // 根据房间号搜索预约信息
 void searchByRoomHouse(struct Reservation* head, int roomHouse) {
-    struct Reservation* current = head;
-    while (current != NULL) {
-        if (current->roomHouse == roomHouse) {
-            printf("\t\033[36m预约信息:\n");
-            printReserve(current);
+    if (head != NULL)
+    {
+        struct Reservation* current = head;
+        while (current != NULL) {
+            if (current->roomHouse == roomHouse) {
+                printf("\t\033[36m预约信息:\n");
+                printReserve(current);
+            }
+            current = current->next;
         }
-        current = current->next;
+
+        printf("\n\t按任意键继续!");
+        getchar();
+        getchar();
+        return;
+        Sleep(1000);
     }
-    printf("\n\t按任意键继续!");
-    getchar();
-    getchar();
-    return;
-    printf("\t\033[31m未找到房屋信息.\n");
-    Sleep(1000);
+    else
+    {
+        printf("\t\033[31m未找到房屋信息.\n");
+        Sleep(1000);
+        return;
+    }
 }
 void searchByuserName(struct Reservation* head, const char name[]) {
     struct Reservation* current = head;

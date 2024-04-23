@@ -78,7 +78,7 @@ void printRental(struct RentalInformation* rental) {
     printf("\t中介姓名: %s\n", rental->IntermediaryName);
     printf("\t合同签订日期·: %s\n", rental->ContractDate);
     printf("\t出租开始日期: %s\n", rental->Rentaldate);
-    printf("\t预计出租时长: %s\n", rental->EstimatedRentalDuration);
+    printf("\t预计出租时长: %d\n", rental->EstimatedRentalDuration);
     printf("\033[37m\n");
 }
 
@@ -99,7 +99,7 @@ void printList2(struct RentalInformation* head) {
 }
 struct RentalInformation* loadListFromFile2(struct RentalInformation* head, FILE* file) {
     struct RentalInformation temp;
-    while (fscanf(file, "%d %19s %19s %19s %19s %19s", &temp.roomHouse, temp.TenantName, temp.IntermediaryName, temp.ContractDate, temp.Rentaldate, temp.EstimatedRentalDuration) == 6) {
+    while (fscanf(file, "%d %19s %19s %19s %19s %d", &temp.roomHouse, temp.TenantName, temp.IntermediaryName, temp.ContractDate, temp.Rentaldate, &temp.EstimatedRentalDuration) == 6) {
         struct RentalInformation* newRental = (struct RentalInformation*)malloc(sizeof(struct RentalInformation));
         if (newRental == NULL) {
             printf("内存分配失败\n");
@@ -125,10 +125,10 @@ void saveListToFile2(struct RentalInformation* head, const char* filename) {
 
     struct RentalInformation* current = head;
     while (current->next != NULL) {
-        fprintf(file, "%d %s %s %s %s %s\n", current->roomHouse, current->TenantName, current->IntermediaryName, current->ContractDate, current->Rentaldate, current->EstimatedRentalDuration);
+        fprintf(file, "%d %s %s %s %s %d\n", current->roomHouse, current->TenantName, current->IntermediaryName, current->ContractDate, current->Rentaldate, current->EstimatedRentalDuration);
         current = current->next;
     }
-    fprintf(file, "%d %s %s %s %s %s", current->roomHouse, current->TenantName, current->IntermediaryName, current->ContractDate, current->Rentaldate, current->EstimatedRentalDuration);
+    fprintf(file, "%d %s %s %s %s %d", current->roomHouse, current->TenantName, current->IntermediaryName, current->ContractDate, current->Rentaldate, current->EstimatedRentalDuration);
     fclose(file);
 }
 
@@ -179,14 +179,12 @@ struct RentalInformation* addRental(struct RentalInformation* head, struct House
     scanf("%s", newRental->TenantName);
     printf("\t请输入中介姓名: ");
     scanf("%s", newRental->IntermediaryName);
-    printf("\t请输入合同签订日期·: ");
+    printf("\t请输入合同签订日期: ");
     scanf("%s", newRental->ContractDate);
     printf("\t请输入租房开始时间: ");
     scanf("%s", newRental->Rentaldate);
-    printf("\t请输入预计租房时间: ");
-    scanf("%s", newRental->EstimatedRentalDuration);
-
-
+    printf("\t请输入预计租房时间:(月) ");
+    scanf("%d", &newRental->EstimatedRentalDuration);
     int index = -1;
     for (int i = 0; i < houseCount_rent; i++)
     {
@@ -215,8 +213,11 @@ struct RentalInformation* addRental(struct RentalInformation* head, struct House
     if (index != -1)
     {
         houses[index].cnt++;
-        houses[index].rent_time += (int)newRental->EstimatedRentalDuration;
+        houses[index].rent_time += newRental->EstimatedRentalDuration;
     }
+    file = fopen("house_info.txt", "w");
+    saveHouseInfo(houses, houseCount_rent, file);
+    fclose(file);
     //printf("%d\n", agencyCount_rent);
     file_agency = fopen("Agency_info.txt", "w");
     saveAgencyInfo(agencys, agencyCount_rent, file_agency);
@@ -240,7 +241,7 @@ void modifyRental(struct RentalInformation* head, int roomHouse) {
             printf("\t请输入新的租房开始日期: ");
             scanf("%s", current->Rentaldate);
             printf("\t请输入新的预计租房时间: ");
-            scanf("%s", current->EstimatedRentalDuration);
+            scanf("%d", &current->EstimatedRentalDuration);
             printf("\t租房信息更新成功.\n");
             return;
         }

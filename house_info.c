@@ -98,8 +98,8 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
                     }
                 case 3:
                     printf("请输入户型：");
-                    scanf("%s", &input_num);
-                    Houselayout(houses, houseCount, input_num);
+                    scanf("%s", &input_ch);
+                    Houselayout(houses, houseCount, input_ch);
                     printf("\t按任意键继续");
                     getchar();
                     getchar();
@@ -114,8 +114,8 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
                     break;
                 case 5:
                     printf("请输入最低评分要求：");
-                    scanf("%f", &input_num);
-                    Houserating(houses, houseCount, input_num);
+                    scanf("%d", &input_num);
+                    Houserating(houses, houseCount,input_num);
                     printf("\t按任意键继续");
                     getchar();
                     getchar();
@@ -243,8 +243,6 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
         }
         else if (strcmp(command, "4") == 0)
         {
-            int houseCount_rent = 0;
-
             char commmand_sta[20];
             system("cls");
             while (1)
@@ -327,11 +325,16 @@ void modifyHouseInfo(struct House* house) {
     scanf("%d", &(house->score));
     printf("\t请输入空闲时间段: ");
     scanf("%s", house->time_period);
+    printf("\t请输入出租次数: ");
+    scanf("%d", &(house->cnt));
+    printf("\t请输入出租总时长: ");
+    scanf("%d", &(house->rent_time));
 }
 
 
 void saveHouseInfo(struct House house[], int count, FILE* file) {
-    for (int i = 0; i < count; i++) {
+    int i;
+    for (i = 0; i < count-1; i++) {
         fprintf(file, "%d\n", house[i].roomNumber);
         fprintf(file, "%s\n", house[i].location);
         fprintf(file, "%d\n", house[i].floor);
@@ -341,9 +344,22 @@ void saveHouseInfo(struct House house[], int count, FILE* file) {
         fprintf(file, "%d\n", house[i].price);
         fprintf(file, "%.2f\n", house[i].area);
         fprintf(file, "%d\n", house[i].score);
-        if (i == count - 1) fprintf(file, "%s", house[i].time_period);
-        else fprintf(file, "%s\n", house[i].time_period);
+        fprintf(file, "%s\n", house[i].time_period);
+        fprintf(file, "%d\n", house[i].cnt);
+        fprintf(file, "%d\n", house[i].rent_time);
     }
+    fprintf(file, "%d\n", house[i].roomNumber);
+    fprintf(file, "%s\n", house[i].location);
+    fprintf(file, "%d\n", house[i].floor);
+    fprintf(file, "%s\n", house[i].orientation);
+    fprintf(file, "%s\n", house[i].layout);
+    fprintf(file, "%s\n", house[i].decoration);
+    fprintf(file, "%d\n", house[i].price);
+    fprintf(file, "%.2f\n", house[i].area);
+    fprintf(file, "%d\n", house[i].score);
+    fprintf(file, "%s\n", house[i].time_period);
+    fprintf(file, "%d\n", house[i].cnt);
+    fprintf(file, "%d", house[i].rent_time);
 }
 
 
@@ -367,6 +383,8 @@ void loadHouseInfo(struct House house[], int* count, FILE* file) {
         fscanf(file, "%f", &(house[*count].area));
         fscanf(file, "%d", &(house[*count].score));
         fscanf(file, "%s", house[*count].time_period);
+        fscanf(file, "%d", &house[*count].cnt);
+        fscanf(file, "%d", &house[*count].rent_time);
         (*count)++;
     }
 }
@@ -516,16 +534,17 @@ void statistic_agency(struct Agency agency[], int count) {
         if (agency[i].reservation_cnt == 0) {
             continue;
         }
-        printf("中介的姓名: %s\n", agency[i].name);
-        printf("中介的预约次数: %d\n", agency[i].reservation_cnt);
-        printf("中介的成功租房次数: %d\n", agency[i].rent_cnt);
+        printf("\t\033[36m中介的姓名: %s\n", agency[i].name);
+        printf("\t中介的预约次数: %d\n", agency[i].reservation_cnt);
+        printf("\t中介的成功租房次数: %d\n", agency[i].rent_cnt);
         double rate = (double)agency[i].rent_cnt / agency[i].reservation_cnt;
-        printf("中介的出租率: %.2f\n\n", rate);
+        printf("\t中介的出租率: %.2f%%\n\n", rate*100);
     }
 
-    printf("按任意键继续\n");
+    printf("\t按任意键继续\n\033[37m");
     getchar();
     getchar();
+    system("cls");
 }
 /**************************************/
 //户型查找

@@ -6,7 +6,7 @@ struct RentalInformation {
     char IntermediaryName[20];
     char ContractDate[20];
     char Rentaldate[20];
-    char EstimatedRentalDuration[20];
+    int EstimatedRentalDuration;
     struct RentalInformation* next;
 };
 

@@ -232,6 +232,7 @@ int Delete() {//删除
 	else {
 		printf("\t\033[31m账号信息为空，按任意键继续\n");
 		getchar();
+		getchar();
 
 	}
 }
@@ -380,7 +381,7 @@ void enter_zk(char name[20],char uid[20])
 	FILE* fp;
 	AC ac[1000];
 	int n = 0;
-	fp = fopen("enter.txt", "rt");
+	fp = fopen("enter.txt", "r");
 	if (fp == NULL) {
 		printf("\t数据丢失，请联系管理员 按任意键继续\n");
 		getchar();
@@ -392,12 +393,12 @@ void enter_zk(char name[20],char uid[20])
 	fclose(fp);
 	printf("\t\033[36m请输入用户名\n");
 	printf("\033[37m\t");
-	char ch[20];
-	scanf("%s", ch);
+	char ch_zk[20];
+	scanf("%s", ch_zk);
 	// 查找用户名
 	int i;
 	for (i = 0; i < n; i++) {
-		if (strcmp(ch, ac[i].userName1) == 0) {
+		if (strcmp(ch_zk, ac[i].userName1) == 0) {
 			break;
 		}
 	}
@@ -408,8 +409,8 @@ void enter_zk(char name[20],char uid[20])
 	label_4:
 		printf("\t\033[36m请输入密码:\n");
 		printf("\t\033[37m");
-		scanf("%s", ch);
-		if (strcmp(ch, ac[i].passWorld1) == 0)
+		scanf("%s", ch_zk);
+		if (strcmp(ch_zk, ac[i].passWorld1) == 0)
 		{
 			return;
 		}
@@ -440,6 +441,7 @@ void enter_zk(char name[20],char uid[20])
 		printf("\t\033[36m用户不存在\n");
 		printf("\t按任意键继续");
 		printf("\t\033[37m");
+		getchar();
 		getchar();
 		system("cls");
 		enter();
