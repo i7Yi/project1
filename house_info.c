@@ -55,12 +55,19 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
                 printf("\t=================================\n");
                 printf("\t\033[36m1.查询所有\n\t---------------------------------\n");
                 printf("\t2.房间号查询\n\t---------------------------------\n");
-                printf("\t3.返回\n\t---------------------------------\n");
+                printf("\t3.按户型查询\n\t---------------------------------\n");
+                printf("\t4.按朝向查询\n\t---------------------------------\n");
+                printf("\t5.按指定评分查询\n\t---------------------------------\n");
+                printf("\t6.按面积查询\n\t---------------------------------\n");
+                printf("\t7.按指定价格查询\n\t---------------------------------\n");
+                printf("\t8.返回\n\t---------------------------------\n");
                 printf("\033[37m\t");
                 printf("\t\033[36m当前房源数量:%d\n", houseCount);
                 
                 printf("\t\033[37m");
                 int command_second;
+                int input_num;
+                char input_ch[20];
                 scanf("%d", &command_second);
                 switch (command_second)
                 {
@@ -90,6 +97,46 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
                         break;
                     }
                 case 3:
+                    printf("请输入户型：");
+                    scanf("%s", &input_num);
+                    Houselayout(houses, houseCount, input_num);
+                    printf("\t按任意键继续");
+                    getchar();
+                    getchar();
+                    break;
+                case 4:
+                    printf("请输入朝向：");
+                    scanf("%s", input_ch);
+                    Houseorientation(houses, houseCount, input_ch);
+                    printf("\t按任意键继续");
+                    getchar();
+                    getchar();
+                    break;
+                case 5:
+                    printf("请输入最低评分要求：");
+                    scanf("%f", &input_num);
+                    Houserating(houses, houseCount, input_num);
+                    printf("\t按任意键继续");
+                    getchar();
+                    getchar();
+                    break;
+                case 6:
+                    printf("请输入最低面积：");
+                    scanf("%d", &input_num);
+                    Housearea(houses, houseCount, input_num);
+                    printf("\t按任意键继续");
+                    getchar();
+                    getchar();
+                    break;
+                case 7:
+                    printf("请输入最低价格：");
+                    scanf("%d", &input_num);
+                    Houseprice(houses, houseCount,input_num);
+                    printf("\t按任意键继续");
+                    getchar();
+                    getchar();
+                    break;
+                case 8:
                     system("cls");
                     return;
                     break;
@@ -199,6 +246,7 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
             int houseCount_rent = 0;
 
             char commmand_sta[20];
+            system("cls");
             while (1)
             {
                 printf("\t\033[31m=================================\n");
@@ -449,6 +497,19 @@ void loadAgencyInfo(struct Agency agency[], int* count, FILE* file)
         (*count)++;
     }
 }
+void saveAgencyInfo(struct Agency agency[], int count, FILE* file)
+{
+    int i;
+    for (i = 0; i < count - 1; i++) {
+        fprintf(file, "%s\n", agency[i].name);
+        fprintf(file, "%d\n", agency[i].reservation_cnt);
+        fprintf(file, "%d\n", agency[i].rent_cnt);
+    }
+    fprintf(file, "%s\n", agency[i].name);
+    fprintf(file, "%d\n", agency[i].reservation_cnt);
+    fprintf(file, "%d", agency[i].rent_cnt);
+    fclose(file);
+}
 void statistic_agency(struct Agency agency[], int count) {
 
     for (int i = 0; i < count; i++) {
@@ -465,4 +526,95 @@ void statistic_agency(struct Agency agency[], int count) {
     printf("按任意键继续\n");
     getchar();
     getchar();
+}
+/**************************************/
+//户型查找
+void Houselayout(struct House* listings, int numListings, char* layout) {
+    printf("\033[36m符合 %s 户型要求的房屋信息如下:\n", layout);
+    int found = 0;
+    for (int i = 0; i < numListings; ++i) {
+        if (strcmp(listings[i].layout, layout) == 0) {
+            printf("\033[37m房间号: %d\n房子的位置: %s\n楼层: %d\n朝向: %s\n房型: %s\n价格: %d\n面积: %.2f\n评分: %d\n空闲时间段: %s开始\n\n",
+                listings[i].roomNumber, listings[i].location, listings[i].floor, listings[i].orientation, listings[i].layout, listings[i].price,
+                listings[i].area, listings[i].score, listings[i].time_period);
+            found = 1;
+        }
+    }
+
+    if (!found) {
+        printf("No available houses found with this layout.\n");
+    }
+}
+//装修查找
+void Housedecoration(struct House* listings, int numListings, char* decorationType) {
+    printf("\033[36m装修类型为 %s 的房屋信息如下:\n", decorationType);
+    int found = 0;
+    for (int i = 0; i < numListings; ++i) {
+        if (strcmp(listings[i].decoration, decorationType) == 0) {
+            printf("\033[37m房间号: %d\n房子的位置: %s\n楼层: %d\n朝向: %s\n房型: %s\n价格: %d\n面积: %.2f\n评分: %d\n空闲时间段: %s开始\n\n",
+                listings[i].roomNumber, listings[i].location, listings[i].floor, listings[i].orientation, listings[i].layout, listings[i].price,
+                listings[i].area, listings[i].score, listings[i].time_period);
+            found = 1;
+        }
+    }
+
+    if (!found) {
+        printf("No available houses found with this decoration type.\n");
+    }
+}
+//评分查找
+void Houserating(struct House* listings, int numListings, int minRating) {
+    printf("\033[36m评分高于 %d 的房屋信息如下:\n", minRating);
+    int found = 0;
+    for (int i = 0; i < numListings; ++i) {
+        if (listings[i].score > minRating) {
+            printf("\033[37m房间号: %d\n房子的位置: %s\n楼层: %d\n朝向: %s\n房型: %s\n价格: %d\n面积: %.2f\n评分: %d\n空闲时间段: %s开始\n\n",
+                listings[i].roomNumber, listings[i].location, listings[i].floor, listings[i].orientation, listings[i].layout, listings[i].price,
+                listings[i].area, listings[i].score, listings[i].time_period);
+            found = 1;
+        }
+    }
+
+    if (!found) {
+        printf("No available houses found with a score higher than %.1f.\n", minRating);
+    }
+}
+//朝向查找
+void Houseorientation(struct House* listings, int numListings, char* orientation) {
+    printf("\033[36m朝向为 %s 的房屋信息如下:\n", orientation);
+    int found = 0;
+    for (int i = 0; i < numListings; ++i) {
+        if (strcmp(listings[i].orientation, orientation) == 0) {
+            printf("\033[37m房间号: %d\n房子的位置: %s\n楼层: %d\n朝向: %s\n房型: %s\n价格: %d\n面积: %.2f\n评分: %d\n空闲时间段: %s开始\n\n",
+                listings[i].roomNumber, listings[i].location, listings[i].floor, listings[i].orientation, listings[i].layout, listings[i].price,
+                listings[i].area, listings[i].score, listings[i].time_period);
+            found = 1;
+        }
+    }
+
+    if (!found) {
+        printf("No available houses found with this orientation.\n");
+    }
+}
+//面积查找
+void Housearea(struct House* listings, int num_listings, int min_area) {
+    printf("\033[36m大于等于 %d 面积的房源id：\n", min_area);
+    for (int i = 0; i < num_listings; ++i) {
+        if (listings[i].area >= min_area) {
+            printf("\033[37m房间号: %d\n房子的位置: %s\n楼层: %d\n朝向: %s\n房型: %s\n价格: %d\n面积: %.2f\n评分: %d\n空闲时间段: %s开始\n\n",
+                listings[i].roomNumber, listings[i].location, listings[i].floor, listings[i].orientation, listings[i].layout, listings[i].price,
+                listings[i].area, listings[i].score, listings[i].time_period);
+        }
+    }
+}
+//价格查找
+void Houseprice(struct House* listings, int num_listings, int min_price) {
+    printf("\033[36m大于等于 %d 价格的房源id：\n", min_price);
+    for (int i = 0; i < num_listings; ++i) {
+        if (listings[i].price >= min_price) {
+            printf("\033[37m房间号: %d\n房子的位置: %s\n楼层: %d\n朝向: %s\n房型: %s\n价格: %d\n面积: %.2f\n评分: %d\n空闲时间段: %s开始\n\n",
+                listings[i].roomNumber, listings[i].location, listings[i].floor, listings[i].orientation, listings[i].layout, listings[i].price,
+                listings[i].area, listings[i].score, listings[i].time_period);
+        }
+    }
 }

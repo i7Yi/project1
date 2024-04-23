@@ -1,5 +1,5 @@
 #include "datarecovery.h"
-void data_backup(struct House houses[MAX_NUM], struct Reservation* head,AC accs[], struct RentalInformation* head2)
+void data_backup(struct House houses[MAX_NUM], struct Reservation* head,AC accs[], struct RentalInformation* head2,struct Agency agencys[])
 {
     int count = 0;
     FILE* fp;
@@ -130,9 +130,33 @@ void data_backup(struct House houses[MAX_NUM], struct Reservation* head,AC accs[
         Sleep(3000);
         exit(0);
     }
+    //Agency
+    fp = fopen("Agency_info.txt", "r");
+    if (fp != NULL) {
+        loadAgencyInfo(agencys, &count, fp);
+        fclose(fp);
+    }
+    else
+    {
+        printf("\tAgency_info源文件不存在！备份失败按任意键继续");
+        return;
+    }
+    fp = fopen("Recovery/Agency_info_r.txt", "w");
+    if (fp != NULL)
+    {
+        saveAgencyInfo(agencys, count, fp);
+        fclose(fp);
+        printf("\t\033[36mAgency_info备份成功！\n");
+    }
+    else
+    {
+        printf("\t\033[31mError!系统将在3秒内终止！\n");
+        Sleep(3000);
+        exit(0);
+    }
 }
 
-void recovery(struct House houses[MAX_NUM], struct Reservation **head,AC accs[], struct RentalInformation* head2)
+void recovery(struct House houses[MAX_NUM], struct Reservation **head,AC accs[], struct RentalInformation* head2,struct Agency agencys[])
 {
     int count = 0;
     FILE* fp;
@@ -257,6 +281,30 @@ void recovery(struct House houses[MAX_NUM], struct Reservation **head,AC accs[],
         printf("\t\033[36mrent_info恢复成功！\n按任意键继续\n");
         getchar();
         getchar();
+    }
+    else
+    {
+        printf("\t\033[31mError!系统将在3秒内终止！\n");
+        Sleep(3000);
+        exit(0);
+    }
+    //Agency
+    fp = fopen("Recovery/Agency_info_r.txt", "r");
+    if (fp != NULL) {
+        loadAgencyInfo(agencys, &count, fp);
+        fclose(fp);
+    }
+    else
+    {
+        printf("\tAgency_info源文件不存在！备份失败按任意键继续");
+        return;
+    }
+    fp = fopen("Agency_info.txt", "w");
+    if (fp != NULL)
+    {
+        saveAgencyInfo(agencys, count, fp);
+        fclose(fp);
+        printf("\t\033[36mAgency_info备份成功！\n");
     }
     else
     {

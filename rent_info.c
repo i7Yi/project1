@@ -124,11 +124,11 @@ void saveListToFile2(struct RentalInformation* head, const char* filename) {
     }
 
     struct RentalInformation* current = head;
-    while (current != NULL) {
+    while (current->next != NULL) {
         fprintf(file, "%d %s %s %s %s %s\n", current->roomHouse, current->TenantName, current->IntermediaryName, current->ContractDate, current->Rentaldate, current->EstimatedRentalDuration);
         current = current->next;
     }
-
+    fprintf(file, "%d %s %s %s %s %s", current->roomHouse, current->TenantName, current->IntermediaryName, current->ContractDate, current->Rentaldate, current->EstimatedRentalDuration);
     fclose(file);
 }
 
@@ -219,17 +219,8 @@ struct RentalInformation* addRental(struct RentalInformation* head, struct House
     }
     //printf("%d\n", agencyCount_rent);
     file_agency = fopen("Agency_info.txt", "w");
-    int i;
-    for (i = 0; i < agencyCount_rent - 1; i++) {
-        fprintf(file_agency, "%s\n", agencys[i].name);
-        fprintf(file_agency, "%d\n", agencys[i].reservation_cnt);
-        fprintf(file_agency, "%d\n", agencys[i].rent_cnt);
-    }
-    fprintf(file_agency, "%s\n", agencys[i].name);
-    fprintf(file_agency, "%d\n", agencys[i].reservation_cnt);
-    fprintf(file_agency, "%d", agencys[i].rent_cnt);
+    saveAgencyInfo(agencys, agencyCount_rent, file_agency);
     fclose(file_agency);
-
     newRental->next = head;
     return newRental;
 }

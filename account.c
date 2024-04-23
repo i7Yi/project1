@@ -85,76 +85,76 @@ void sign_in() // 注册
 	}
 }
 
-//void sign_in_user() // 租客注册
-//{
-//	FILE* fp;
-//	int flag = 0;
-//	char userName[10];
-//	char passWorld[10];
-//	char userName1[10];
-//	char passWorld1[10];
-//	while (1)
-//	{
-//		printf("\t注册(用户名密码最多9位)\n");
-//		printf("\t用户名:");
-//		scanf("%s", userName);
-//
-//		if ((fp = fopen("enter.txt", "rt")) == NULL)
-//		{
-//			printf("无法打开文件 enter.txt\n");
-//			return;
-//		}
-//
-//		while (fscanf(fp, "%s %s", userName1, passWorld1) == 2)
-//		{
-//			if (!strcmp(userName, userName1))
-//			{
-//				printf("\t用户名重复\n");
-//				flag = 1;
-//				break;
-//			}
-//		}
-//
-//
-//
-//		if (flag == 1)
-//		{
-//			printf("\t");
-//			printf("1.换个名字 2.返回菜单\n");
-//			printf("\t");
-//			int judge;
-//			scanf("%d", &judge);
-//
-//			switch (judge)
-//			{
-//			case 1:
-//				flag = 0;
-//				continue;
-//				break;
-//			case 2:
-//				system("cls");
-//				enter();
-//				return;
-//			}
-//		}
-//		else
-//		{
-//			printf("\t密码:");
-//			scanf("%s", passWorld);
-//			getchar();
-//			if ((fp = fopen("enter.txt", "at")) == NULL)
-//			{
-//				printf("无法打开文件 enter.txt\n");
-//				return;
-//			}
-//			printf("\t注册成功！按任意键继续");
-//			getchar();
-//			fprintf(fp, "%s %s\n", userName, passWorld);
-//			fclose(fp); // 关闭文件
-//			break;
-//		}
-//	}
-//}
+void sign_in_user() // 租客注册
+{
+	FILE* fp;
+	int flag = 0;
+	char userName[10];
+	char passWorld[10];
+	char userName1[10];
+	char passWorld1[10];
+	while (1)
+	{
+		printf("\t注册(用户名密码最多9位)\n");
+		printf("\t用户名:");
+		scanf("%s", userName);
+
+		if ((fp = fopen("enter.txt", "rt")) == NULL)
+		{
+			printf("无法打开文件 enter.txt\n");
+			return;
+		}
+
+		while (fscanf(fp, "%s %s", userName1, passWorld1) == 2)
+		{
+			if (!strcmp(userName, userName1))
+			{
+				printf("\t用户名重复\n");
+				flag = 1;
+				break;
+			}
+		}
+
+
+
+		if (flag == 1)
+		{
+			printf("\t");
+			printf("1.换个名字 2.返回菜单\n");
+			printf("\t");
+			int judge;
+			scanf("%d", &judge);
+
+			switch (judge)
+			{
+			case 1:
+				flag = 0;
+				continue;
+				break;
+			case 2:
+				system("cls");
+				enter();
+				return;
+			}
+		}
+		else
+		{
+			printf("\t密码:");
+			scanf("%s", passWorld);
+			getchar();
+			if ((fp = fopen("enter.txt", "at")) == NULL)
+			{
+				printf("无法打开文件 enter.txt\n");
+				return;
+			}
+			printf("\t注册成功！按任意键继续");
+			getchar();
+			fprintf(fp, "%s %s\n", userName, passWorld);
+			fclose(fp); // 关闭文件
+			break;
+		}
+	}
+}
 void display_info(FILE* fp, int* n,AC ac[1000]) {
 	fp = fopen("enter.txt", "rt");
 	if (fp == NULL) {
@@ -266,14 +266,16 @@ label_2:
 			{
 				strcpy(ac[i].passWorld1, "888888");
 				// 将更新后的用户信息写回文件
-				fp = fopen("enter.txt", "wt");
+				fp = fopen("enter.txt", "w");
 				if (fp == NULL) {
 					printf("\t打开文件失败\n");
 					exit(1);
 				}
-				for (int k = 0; k < n; k++) {
+				int  k;
+				for (k = 0; k < n-1; k++) {
 					fprintf(fp, "%s %s %s %s\n", ac[k].userName1, ac[k].passWorld1,ac[k].name,ac[k].phone);
 				}
+				fprintf(fp, "%s %s %s %s", ac[k].userName1, ac[k].passWorld1, ac[k].name, ac[k].phone);
 				fclose(fp);
 				printf("\t已将%s的密码重置为\"888888\",按任意键继续");
 				getchar();
@@ -301,10 +303,10 @@ label_2:
 		}
 	}
 }
-void enter_zj(char zj_name[])
+void enter_zj(char zj_name[],char uid[])
 {
 	FILE* fp;
-	AC ac[100];
+	AC ac[1000];
 	int n = 0;
 	fp = fopen("enter.txt", "rt");
 	if (fp == NULL) {
@@ -316,7 +318,6 @@ void enter_zj(char zj_name[])
 		n++;
 	}
 	fclose(fp);
-label_3:
 	printf("\t\033[36m请输入用户名\n");
 	printf("\033[37m\t");
 	char ch[20];
@@ -328,9 +329,11 @@ label_3:
 			break;
 		}
 	}
+	strcpy(zj_name, ac[i].name);
+	strcpy(uid, ac[i].userName1);
 	if (i < n)
 	{
-	label_4:
+	label_3:
 		printf("\t\033[36m请输入密码:\n");
 		printf("\t\033[37m");
 		scanf("%s", ch);
@@ -350,7 +353,7 @@ label_3:
 			switch (judge)
 			{
 			case 1: {
-				goto label_4;
+				goto label_3;
 				break;
 			}
 			case 2: {
@@ -372,10 +375,10 @@ label_3:
 		enter();
 	}
 }
-void enter_zk(char name[])
+void enter_zk(char name[20],char uid[20])
 {
 	FILE* fp;
-	AC ac[100];
+	AC ac[1000];
 	int n = 0;
 	fp = fopen("enter.txt", "rt");
 	if (fp == NULL) {
@@ -387,7 +390,6 @@ void enter_zk(char name[])
 		n++;
 	}
 	fclose(fp);
-label_3:
 	printf("\t\033[36m请输入用户名\n");
 	printf("\033[37m\t");
 	char ch[20];
@@ -400,6 +402,7 @@ label_3:
 		}
 	}
 	strcpy(name, ac[i].name);
+	strcpy(uid, ac[i].userName1);
 	if (i < n)
 	{
 	label_4:
@@ -516,6 +519,7 @@ void code()
 				break;
 			}
 			case 2: {
+				system("cls");
 				enter();
 			}
 			default:
@@ -562,6 +566,74 @@ void modify_code(int *judge)//管理员修改权限码
 			printf("\t无效指令！请重新输入！");
 			Sleep(1000);
 			system("cls");
+		}
+	}
+}
+
+void modify_password(int* judge,const char uid[])//用户修改密码
+{
+	FILE* fp = fopen("enter.txt", "rt");
+	AC ac[1000];
+	int n = 0;
+	loadAccount(ac, &n, fp);
+	char flag[5];
+	if (n > 0)
+	{
+		int i;
+		for (i = 0; i < n; i++) {
+			if (strcmp(uid, ac[i].userName1) == 0) {
+				break;
+			}
+		}
+		if (i < n)
+		{
+			printf("\t请输入新密码：");
+			char newPassword[10];
+			scanf("%s", newPassword);
+			int judge_password_modofy;
+			while (1)
+			{
+				printf("\t确认修改新的密码 %s 吗？\n", newPassword);
+				printf("\t\033[36m1.确认\t2.放弃修改\n");
+				printf("\t\033[37m");
+				scanf("%d", &judge_password_modofy);
+				if (judge_password_modofy == 1)
+				{
+					strcpy(ac[i].passWorld1, newPassword);
+					fp = fopen("enter.txt", "wt");
+					if (fp == NULL) {
+						printf("\t打开文件失败\n");
+						exit(1);
+					}
+					int k;
+					for (k = 0; k < n-1; k++) {
+						fprintf(fp, "%s %s %s %s\n", ac[k].userName1, ac[k].passWorld1, ac[k].name, ac[k].phone);
+					}
+					fprintf(fp, "%s %s %s %s", ac[k].userName1, ac[k].passWorld1, ac[k].name, ac[k].phone);
+					printf("\t已将的密码重置为\"%s\",请重新登陆！",newPassword);
+					fclose(fp);
+					Sleep(1000);
+					system("cls");
+					enter();
+					break;
+				}
+				else if (judge_password_modofy == 2)
+				{
+					system("cls");
+					*judge = 1;
+					break;
+				}
+				else
+				{
+					printf("\t无效指令！请重新输入！");
+					Sleep(1000);
+					system("cls");
+				}
+			}
+		}
+		else {
+			printf("\t\033[31m未找到要删除的用户名,按任意键继续\n");
+			getchar();
 		}
 	}
 }

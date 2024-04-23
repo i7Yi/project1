@@ -357,16 +357,9 @@ struct Reservation* addReserve(struct Reservation* head, struct Agency agencys[M
     }
 
     file_agency = fopen("Agency_info.txt", "w");
-    int i;
-    for (i = 0; i < agencyCount_reserve - 1; i++) {
-        fprintf(file_agency, "%s\n", agencys[i].name);
-        fprintf(file_agency, "%d\n", agencys[i].reservation_cnt);
-        fprintf(file_agency, "%d\n", agencys[i].rent_cnt);
-    }
-    fprintf(file_agency, "%s\n", agencys[i].name);
-    fprintf(file_agency, "%d\n", agencys[i].reservation_cnt);
-    fprintf(file_agency, "%d", agencys[i].rent_cnt);
+    saveAgencyInfo(agencys, agencyCount_reserve, file_agency);
     fclose(file_agency);
+
     newReserve->next = head;
     printf("\t添加成功！");
     Sleep(1000);

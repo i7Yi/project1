@@ -12,10 +12,11 @@ typedef struct {//存用户和密码
 void sign_in();
 int Delete();
 void modify_reset();
-void enter_zj(char name[]);
-void enter_zk(char name[]);
+void enter_zj(char name[],char uid[]);
+void enter_zk(char name[20],char uid[20]);
 void loadAccount(AC acc[], int* count, FILE* fp);
 void saveAccount(AC acc[], int count, FILE* fp);
 void display_info(FILE* fp, int* n, AC ac[1000]);
 void code();
 void modify_code(int *judge);
+void modify_password(int* judge, const char uid[]);
