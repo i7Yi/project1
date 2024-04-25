@@ -2,7 +2,7 @@
 
 int houseCount_reserve = 0;
 int agencyCount_reserve = 0;
-void interface_reservation(struct Reservation* head, struct Agency agencys[MAX_NUM],struct House houses[MAX_NUM])
+void interface_reservation(struct Reservation* head, struct Agency agencys[MAX_NUM], struct House houses[MAX_NUM])
 {//信息管理子界面
     FILE* file = fopen("reservation_info.txt", "a+");
     char filename[] = "reservation_info.txt";
@@ -46,7 +46,7 @@ void interface_reservation(struct Reservation* head, struct Agency agencys[MAX_N
             searchByRoomHouse(head, roomHouse);
         }
         else if (strcmp(command, "3") == 0) {
-            head = addReserve(head,agencys,houses);
+            head = addReserve(head, agencys, houses);
             if (head == NULL)
             {
                 continue;
@@ -73,7 +73,7 @@ void interface_reservation(struct Reservation* head, struct Agency agencys[MAX_N
     }
 }
 
-void interface_reservation_user(struct Reservation* head, const char name[], struct Agency agencys[MAX_NUM],struct House houses[MAX_NUM])
+void interface_reservation_user(struct Reservation* head, const char name[], struct Agency agencys[MAX_NUM], struct House houses[MAX_NUM])
 {//信息管理子界面
     FILE* file = fopen("reservation_info.txt", "r");
     char filename[] = "reservation_info.txt";
@@ -110,7 +110,7 @@ void interface_reservation_user(struct Reservation* head, const char name[], str
         {
             system("cls");
             FILE* file = fopen("reservation_info.txt", "r");
-            loadListFromFile(head,file);
+            loadListFromFile(head, file);
             printList_user(head, name);
             printf("\t按任意键继续！");
             getchar();
@@ -125,7 +125,7 @@ void interface_reservation_user(struct Reservation* head, const char name[], str
             searchByRoomHouse(head, roomHouse);
         }
         else if (strcmp(command, "3") == 0) {
-            head = addReserve(head,agencys,houses);
+            head = addReserve(head, agencys, houses);
             if (head == NULL)
             {
                 continue;
@@ -193,7 +193,7 @@ void printReserve(struct Reservation* reserve) {
     printf("\t租客姓名: %s\n", reserve->TenantName);
     printf("\t中介姓名: %s\n", reserve->IntermediaryName);
     printf("\t看房时间: %s\n", reserve->time);
-    printf("\t租客反馈: %s\n", reserve->evaluation);
+    printf("\t预约信息: %s\n", reserve->evaluation);
     printf("\n");
 }
 void printReserve_user(struct Reservation* reserve, char name[]) {
@@ -204,7 +204,7 @@ void printReserve_user(struct Reservation* reserve, char name[]) {
         printf("\t租客姓名: %s\n", reserve->TenantName);
         printf("\t中介姓名: %s\n", reserve->IntermediaryName);
         printf("\t看房时间: %s\n", reserve->time);
-        printf("\t租客反馈: %s\n", reserve->evaluation);
+        printf("\t预约信息: %s\n", reserve->evaluation);
         printf("\n");
     }
 }
@@ -254,7 +254,7 @@ void modifyReserve(struct Reservation* head, int roomHouse) {
             scanf("%s", current->IntermediaryName);
             printf("\t请输入新的看房时长: ");
             scanf("%s", current->time);
-            printf("\t请输入新的看房反馈: ");
+            printf("\t请输入新的预约信息: ");
             scanf("%s", current->evaluation);
             printf("\t预约信息更新成功.\n");
             Sleep(1000);
@@ -267,7 +267,7 @@ void modifyReserve(struct Reservation* head, int roomHouse) {
 }
 
 // 添加预约信息
-struct Reservation* addReserve(struct Reservation* head, struct Agency agencys[MAX_NUM],struct House houses[MAX_NUM]) {
+struct Reservation* addReserve(struct Reservation* head, struct Agency agencys[MAX_NUM], struct House houses[MAX_NUM]) {
     struct Reservation* newReserve = (struct Reservation*)malloc(sizeof(struct Reservation));
     if (newReserve == NULL) {
         printf("Memory allocation failed.\n");

@@ -124,7 +124,7 @@ void enter()		//登录界面
 				else if (j_info == 2)
 				{
 					struct Reservation* head = NULL;
-					interface_reservation(head,agencys,houses);
+					interface_reservation(head, agencys, houses);
 					goto label_1;
 					break;
 				}
@@ -159,12 +159,12 @@ void enter()		//登录界面
 				scanf("%d", &j_modify_data);
 				if (j_modify_data == 1)
 				{
-					data_backup(houses_data, head, accs,head2,agencys);
+					data_backup(houses_data, head, accs, head2, agencys);
 					break;
 				}
 				else if (j_modify_data == 2)
 				{
-					recovery(houses_data, head, accs,head2,agencys);
+					recovery(houses_data, head, accs, head2, agencys);
 					break;
 				}
 				else if (j_modify_data == 3)
@@ -199,11 +199,11 @@ void enter()		//登录界面
 		code();
 		char zj_name[20];
 		char uid[20];
-		enter_zj(zj_name,uid);
+		enter_zj(zj_name, uid);
 	label_5:
 		system("cls");
 		printf("\t\033[31m=================================\n");
-		printf("\t|\t 中介\"%s\"登陆成功！   | \n",zj_name);
+		printf("\t|\t 中介\"%s\"登陆成功！   | \n", zj_name);
 		printf("\t=================================\n");
 		printf("\t\033[36m1.信息查询\n\t---------------------------------\n");
 		printf("\t2.租房\n\t---------------------------------\n");
@@ -222,13 +222,13 @@ void enter()		//登录界面
 			switch (j_info)
 			{
 			case 1: {//房源信息
-				interface_house_info(houses,agencys);
+				interface_house_info(houses, agencys);
 				goto label_5;
 				break;
 			}
 			case 2: {//预约信息
 				struct Reservation* head = NULL;
-				interface_reservation(head,agencys,houses);
+				interface_reservation(head, agencys, houses);
 				goto label_5;
 				break;
 			}
@@ -242,7 +242,7 @@ void enter()		//登录界面
 		case 2: {//租房
 			system("cls");
 			struct RentalInformation* head2 = NULL;
-			interface_rent(head2,houses,agencys);
+			interface_rent(head2, houses, agencys);
 			goto label_5;
 			break;
 		}
@@ -276,11 +276,11 @@ void enter()		//登录界面
 	case 3: { //租客
 		char zk_name[20];
 		char uid[20];
-		enter_zk(zk_name,uid);
+		enter_zk(zk_name, uid);
 	label_6:
 		system("cls");
 		printf("\t\033[31m=================================\n");
-		printf("\t|\t 租客\"%s\"登陆成功！ \t|\n",zk_name);
+		printf("\t|\t 租客\"%s\"登陆成功！ \t|\n", zk_name);
 		printf("\t=================================\n");
 		printf("\t\033[36m1.信息查询\n\t---------------------------------\n");
 		printf("\t2.修改密码\n\t---------------------------------\n");
@@ -300,13 +300,13 @@ void enter()		//登录界面
 			case 1: {//房源信息
 				struct House houses[MAX_NUM];
 				struct Agency agencys[MAX_NUM];
-				interface_house_info(houses,agencys,houses);
+				interface_house_info(houses, agencys, houses);
 				goto label_6;
 				break;
 			}
 			case 2: {//预约信息
 				struct Reservation* head = NULL;
-				interface_reservation_user(head,zk_name,agencys,houses);
+				interface_reservation_user(head, zk_name, agencys, houses);
 				goto label_6;
 				break;
 			}
@@ -316,7 +316,7 @@ void enter()		//登录界面
 		case 2:
 		{
 			int judge_modify_password = 0;
-			modify_password(&judge_modify_password,uid);
+			modify_password(&judge_modify_password, uid);
 			if (judge_modify_password == 1)
 			{
 				goto label_6;

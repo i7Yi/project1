@@ -245,7 +245,7 @@ void modify_reset()//管理员重置密码
 	char flag[5];
 	if (n > 0)
 	{
-label_2:
+	label_2:
 		printf("\t输入你要重置密码的用户名\n");
 		printf("\033[37m\t");
 		char id[20];
@@ -273,8 +273,8 @@ label_2:
 					exit(1);
 				}
 				int  k;
-				for (k = 0; k < n-1; k++) {
-					fprintf(fp, "%s %s %s %s\n", ac[k].userName1, ac[k].passWorld1,ac[k].name,ac[k].phone);
+				for (k = 0; k < n - 1; k++) {
+					fprintf(fp, "%s %s %s %s\n", ac[k].userName1, ac[k].passWorld1, ac[k].name, ac[k].phone);
 				}
 				fprintf(fp, "%s %s %s %s", ac[k].userName1, ac[k].passWorld1, ac[k].name, ac[k].phone);
 				fclose(fp);
@@ -304,10 +304,9 @@ label_2:
 		}
 	}
 }
-void enter_zj(char zj_name[],char uid[])
-{
+void enter_zj(char zj_name[], char uid[]) {
 	FILE* fp;
-	AC ac[1000];
+	AC ac[1000]; // Assuming there are not more than 1000 users
 	int n = 0;
 	fp = fopen("enter.txt", "rt");
 	if (fp == NULL) {
@@ -330,29 +329,24 @@ void enter_zj(char zj_name[],char uid[])
 			break;
 		}
 	}
-	strcpy(zj_name, ac[i].name);
-	strcpy(uid, ac[i].userName1);
-	if (i < n)
-	{
+	if (i < n) {
 	label_3:
 		printf("\t\033[36m请输入密码:\n");
 		printf("\t\033[37m");
 		scanf("%s", ch);
-		if (strcmp(ch, ac[i].passWorld1) == 0)
-		{
+		if (strcmp(ch, ac[i].passWorld1) == 0) {
 			strcpy(zj_name, ac[i].name);
+			strcpy(uid, ac[i].userName1);
 			return;
 		}
-		else
-		{
+		else {
 			printf("\t密码错误！\n");
 			printf("\t1.再试一次\t2.返回\n");
 			printf("\t");
 			int judge;
 			scanf("%d", &judge);
 			fflush(stdin);
-			switch (judge)
-			{
+			switch (judge) {
 			case 1: {
 				goto label_3;
 				break;
@@ -365,8 +359,7 @@ void enter_zj(char zj_name[],char uid[])
 			}
 		}
 	}
-	else
-	{
+	else {
 		printf("\t\033[36m用户不存在\n");
 		printf("\t按任意键继续");
 		printf("\t\033[37m");
@@ -376,6 +369,7 @@ void enter_zj(char zj_name[],char uid[])
 		enter();
 	}
 }
+
 void enter_zk(char name[20],char uid[20])
 {
 	FILE* fp;
