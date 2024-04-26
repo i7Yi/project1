@@ -193,7 +193,7 @@ void printReserve(struct Reservation* reserve) {
     printf("\t租客姓名: %s\n", reserve->TenantName);
     printf("\t中介姓名: %s\n", reserve->IntermediaryName);
     printf("\t看房时间: %s\n", reserve->time);
-    printf("\t预约信息: %s\n", reserve->evaluation);
+    printf("\t备注信息: %s\n", reserve->evaluation);
     printf("\n");
 }
 void printReserve_user(struct Reservation* reserve, char name[]) {
@@ -204,7 +204,7 @@ void printReserve_user(struct Reservation* reserve, char name[]) {
         printf("\t租客姓名: %s\n", reserve->TenantName);
         printf("\t中介姓名: %s\n", reserve->IntermediaryName);
         printf("\t看房时间: %s\n", reserve->time);
-        printf("\t预约信息: %s\n", reserve->evaluation);
+        printf("\t备注信息: %s\n", reserve->evaluation);
         printf("\n");
     }
 }
@@ -254,7 +254,7 @@ void modifyReserve(struct Reservation* head, int roomHouse) {
             scanf("%s", current->IntermediaryName);
             printf("\t请输入新的看房时长: ");
             scanf("%s", current->time);
-            printf("\t请输入新的预约信息: ");
+            printf("\t请输入新的备注信息: ");
             scanf("%s", current->evaluation);
             printf("\t预约信息更新成功.\n");
             Sleep(1000);
@@ -337,7 +337,7 @@ struct Reservation* addReserve(struct Reservation* head, struct Agency agencys[M
     scanf("%s", newReserve->IntermediaryName);
     printf("\t请输入看房时长: ");
     scanf("%s", newReserve->time);
-    printf("\t请输入看房反馈: ");
+    printf("\t请输入备注信息: ");
     scanf("%s", newReserve->evaluation);
 
     int index_a = -1;

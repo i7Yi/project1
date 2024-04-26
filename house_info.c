@@ -484,16 +484,16 @@ void statistic_house(struct House house[], int count)
         int a = house[i].cnt;
         int b = house[i].rent_time;
         double average = b / (a * 1.0);
-        printf("房间号:%d\n", house[i].roomNumber);
+        printf("\t\033[36m房间号:%d\n", house[i].roomNumber);
         if (a != 0)
         {
-            printf("总出租时间:%d\n", house[i].rent_time);
-            printf("总出租次数:%d\n", house[i].cnt);
-            printf("平均出租时间(月/次):%.1f\n", average);
+            printf("\t总出租时间:%d\n", house[i].rent_time);
+            printf("\t总出租次数:%d\n", house[i].cnt);
+            printf("\t平均出租时间(月/次):%.1f\n", average);
         }
         else
         {
-            printf("无出租次数\n");
+            printf("\t无出租次数\n");
         }
     }
 }
