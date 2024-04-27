@@ -310,6 +310,10 @@ void enter()		//登录界面
 				goto label_6;
 				break;
 			}
+			case 3: {
+				goto label_6;
+				break;
+			}
 			}
 
 		}

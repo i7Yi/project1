@@ -189,7 +189,7 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
                     scanf("%d", &a);
                     searchHousesByPriceAndScore(houses, houseCount, c, d, a);
                     break;
-                case 100:
+                case 13:
                     system("cls");
                     return;
                     break;

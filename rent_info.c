@@ -97,6 +97,7 @@ void printList2(struct RentalInformation* head) {
         current = current->next;
     }
 }
+//加载信息
 struct RentalInformation* loadListFromFile2(struct RentalInformation* head, FILE* file) {
     struct RentalInformation temp;
     while (fscanf(file, "%d %19s %19s %19s %19s %d", &temp.roomHouse, temp.TenantName, temp.IntermediaryName, temp.ContractDate, temp.Rentaldate, &temp.EstimatedRentalDuration) == 6) {
