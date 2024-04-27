@@ -1,7 +1,8 @@
 #include "house_info.h"
 #include "agency_info.h"
 
-
+int judge = 0;
+int judge_all = 0;
 int houseCount = 0;
 int agencyCount = 0;
 void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX_NUM])
@@ -49,6 +50,8 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
         if (strcmp(command, "1") == 0) {
             while (1)
             {
+                judge = 0;
+                judge_all = 0;
                 system("cls");
                 printf("\t\033[31m=================================\n");
                 printf("\t|\t    请输入指令:\t\t|\n");
@@ -60,7 +63,12 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
                 printf("\t5.按指定评分查询\n\t---------------------------------\n");
                 printf("\t6.按面积查询\n\t---------------------------------\n");
                 printf("\t7.按指定价格查询\n\t---------------------------------\n");
-                printf("\t8.返回\n\t---------------------------------\n");
+                printf("\t8.空闲\n\t---------------------------------\n");
+                printf("\t9.地区\n\t---------------------------------\n");
+                printf("\t10.面积和价格\n\t---------------------------------\n");
+                printf("\t11.面积和评分\n\t---------------------------------\n");
+                printf("\t12.价格和评分\n\t---------------------------------\n");
+                printf("\t13.返回\n\t---------------------------------\n");
                 printf("\033[37m\t");
                 printf("\t\033[36m当前房源数量:%d\n", houseCount);
                 
@@ -72,9 +80,11 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
                 switch (command_second)
                 {
                 case 1:
+                    judge_all = 1;
                     for (int i = 0; i < houseCount; i++)
                     {
                         displayHouseInfo(houses[i]);
+                        judge = 1;
                     }
                     printf("\t按任意键继续");
                     getchar();
@@ -137,6 +147,49 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
                     getchar();
                     break;
                 case 8:
+                    printf("输入空闲时间段:\n");
+                    char period[20];
+                    scanf("%s", period);
+                    searchHousesByTimePeriod(houses, houseCount, period);
+                    break;
+                case 9:
+                    printf("请输入地区关键字:\n");
+                    char region[20];
+                    scanf("%s", region);
+                    searchHousesByLocation(houses, houseCount, region);
+                    break;
+                case 10:
+                    printf("输入面积下限:\n");
+                    float a, b;
+                    scanf("%f", &a);
+                    printf("输入面积上限:\n");
+                    scanf("%f", &b);
+                    printf("输入价格下限:\n");
+                    int c, d;
+                    scanf("%d", &c);
+                    printf("输入价格上限:\n");
+                    scanf("%d", &d);
+                    searchHousesByPriceAndArea(houses, houseCount, c, d, a, b);
+                    break;
+                case 11:
+                    printf("输入面积下限:\n");
+                    scanf("%f", &a);
+                    printf("输入面积上限:\n");
+                    scanf("%f", &b);
+                    printf("输入最低评分:\n");
+                    scanf("%d", &c);
+                    searchHousesByAreaAndScore(houses, houseCount, a, b, c);
+                    break;
+                case 12:
+                    printf("输入价格下限:\n");
+                    scanf("%d", &c);
+                    printf("输入价格上限:\n");
+                    scanf("%d", &d);
+                    printf("输入最低评分:\n");
+                    scanf("%d", &a);
+                    searchHousesByPriceAndScore(houses, houseCount, c, d, a);
+                    break;
+                case 100:
                     system("cls");
                     return;
                     break;
@@ -144,7 +197,11 @@ void interface_house_info(struct House houses[MAX_NUM],struct Agency agencys[MAX
                     printf("\t\033[31m无效指令！请重新输入！");
                     Sleep(300);
                 }
-                
+                if (judge == 0)
+                {
+                    printf("\t未查询到符合条件的房屋信息\n");
+                    Sleep(1000);
+                }
             }   
         }
         else if (strcmp(command, "3") == 0) {//录入
@@ -301,6 +358,7 @@ void displayHouseInfo(struct House house) {
     printf("\t评分: %d\n", house.score);
     printf("\t空闲时间段: %s开始\n", house.time_period);
     printf("\033[37m\n\n");
+
 }
 
 
@@ -365,12 +423,6 @@ void saveHouseInfo(struct House house[], int count, FILE* file) {
 
 void loadHouseInfo(struct House house[], int* count, FILE* file) {
     *count = 0;
-    fseek(file, 0, SEEK_END);
-    long fileSize = ftell(file);
-    if (fileSize == 0) {
-        return;
-    }
-    rewind(file);
 
     while (!feof(file) && *count < MAX_NUM) {
         fscanf(file, "%d", &(house[*count].roomNumber));
@@ -547,55 +599,61 @@ void statistic_agency(struct Agency agency[], int count) {
     system("cls");
 }
 /**************************************/
+//韬志
+// 
 //户型查找
 void Houselayout(struct House* listings, int numListings, char* layout) {
     printf("\033[36m符合 %s 户型要求的房屋信息如下:\n", layout);
-    int found = 0;
     for (int i = 0; i < numListings; ++i) {
         if (strcmp(listings[i].layout, layout) == 0) {
             printf("\033[37m房间号: %d\n房子的位置: %s\n楼层: %d\n朝向: %s\n房型: %s\n价格: %d\n面积: %.2f\n评分: %d\n空闲时间段: %s开始\n\n",
                 listings[i].roomNumber, listings[i].location, listings[i].floor, listings[i].orientation, listings[i].layout, listings[i].price,
                 listings[i].area, listings[i].score, listings[i].time_period);
-            found = 1;
+            judge = 1;
         }
     }
-
-    if (!found) {
-        printf("No available houses found with this layout.\n");
+    if (judge != 0)
+    {
+        printf("\t按任意键继续");
+        getchar();
+        getchar();
     }
 }
 //装修查找
 void Housedecoration(struct House* listings, int numListings, char* decorationType) {
     printf("\033[36m装修类型为 %s 的房屋信息如下:\n", decorationType);
-    int found = 0;
+
     for (int i = 0; i < numListings; ++i) {
         if (strcmp(listings[i].decoration, decorationType) == 0) {
             printf("\033[37m房间号: %d\n房子的位置: %s\n楼层: %d\n朝向: %s\n房型: %s\n价格: %d\n面积: %.2f\n评分: %d\n空闲时间段: %s开始\n\n",
                 listings[i].roomNumber, listings[i].location, listings[i].floor, listings[i].orientation, listings[i].layout, listings[i].price,
                 listings[i].area, listings[i].score, listings[i].time_period);
-            found = 1;
+            judge = 1;
         }
     }
-
-    if (!found) {
-        printf("No available houses found with this decoration type.\n");
+    if (judge != 0)
+    {
+        printf("\t按任意键继续");
+        getchar();
+        getchar();
     }
 }
 //评分查找
 void Houserating(struct House* listings, int numListings, int minRating) {
     printf("\033[36m评分高于 %d 的房屋信息如下:\n", minRating);
-    int found = 0;
     for (int i = 0; i < numListings; ++i) {
         if (listings[i].score > minRating) {
             printf("\033[37m房间号: %d\n房子的位置: %s\n楼层: %d\n朝向: %s\n房型: %s\n价格: %d\n面积: %.2f\n评分: %d\n空闲时间段: %s开始\n\n",
                 listings[i].roomNumber, listings[i].location, listings[i].floor, listings[i].orientation, listings[i].layout, listings[i].price,
                 listings[i].area, listings[i].score, listings[i].time_period);
-            found = 1;
+            judge = 1;
         }
     }
-
-    if (!found) {
-        printf("No available houses found with a score higher than %.1f.\n", minRating);
+    if (judge != 0)
+    {
+        printf("\t按任意键继续");
+        getchar();
+        getchar();
     }
 }
 //朝向查找
@@ -607,12 +665,14 @@ void Houseorientation(struct House* listings, int numListings, char* orientation
             printf("\033[37m房间号: %d\n房子的位置: %s\n楼层: %d\n朝向: %s\n房型: %s\n价格: %d\n面积: %.2f\n评分: %d\n空闲时间段: %s开始\n\n",
                 listings[i].roomNumber, listings[i].location, listings[i].floor, listings[i].orientation, listings[i].layout, listings[i].price,
                 listings[i].area, listings[i].score, listings[i].time_period);
-            found = 1;
+            judge = 1;
         }
     }
-
-    if (!found) {
-        printf("No available houses found with this orientation.\n");
+    if (judge != 0)
+    {
+        printf("\t按任意键继续");
+        getchar();
+        getchar();
     }
 }
 //面积查找
@@ -623,7 +683,14 @@ void Housearea(struct House* listings, int num_listings, int min_area) {
             printf("\033[37m房间号: %d\n房子的位置: %s\n楼层: %d\n朝向: %s\n房型: %s\n价格: %d\n面积: %.2f\n评分: %d\n空闲时间段: %s开始\n\n",
                 listings[i].roomNumber, listings[i].location, listings[i].floor, listings[i].orientation, listings[i].layout, listings[i].price,
                 listings[i].area, listings[i].score, listings[i].time_period);
+            judge = 1;
         }
+    }
+    if (judge != 0)
+    {
+        printf("\t按任意键继续");
+        getchar();
+        getchar();
     }
 }
 //价格查找
@@ -634,6 +701,104 @@ void Houseprice(struct House* listings, int num_listings, int min_price) {
             printf("\033[37m房间号: %d\n房子的位置: %s\n楼层: %d\n朝向: %s\n房型: %s\n价格: %d\n面积: %.2f\n评分: %d\n空闲时间段: %s开始\n\n",
                 listings[i].roomNumber, listings[i].location, listings[i].floor, listings[i].orientation, listings[i].layout, listings[i].price,
                 listings[i].area, listings[i].score, listings[i].time_period);
+            judge = 1;
         }
+    }
+    if (judge != 0)
+    {
+        printf("\t按任意键继续");
+        getchar();
+        getchar();
+    }
+}
+
+/****************************************************************/
+//智富
+// 
+//按空闲查找
+void searchHousesByTimePeriod(struct House houses[], int numHouses, const char* inputTimePeriod) {
+    for (int i = 0; i < numHouses; i++) {
+        struct House house = houses[i];
+
+        if (strcmp(house.time_period, inputTimePeriod) > 0) {
+            displayHouseInfo(house);
+            judge = 1;
+        }
+    }
+    if (judge != 0)
+    {
+        printf("\t按任意键继续");
+        getchar();
+        getchar();
+    }
+}
+//地区查找
+void searchHousesByLocation(struct House houses[], int numHouses, const char* keyword) {
+    for (int i = 0; i < numHouses; i++) {
+        struct House house = houses[i];
+
+        if (strstr(house.location, keyword) != NULL) {
+            displayHouseInfo(house);
+            judge = 1;
+        }
+    }
+    if (judge != 0)
+    {
+        printf("\t按任意键继续");
+        getchar();
+        getchar();
+    }
+}
+//面积&价格
+void searchHousesByPriceAndArea(struct House houses[], int numHouses, int minPrice, int maxPrice, float minArea, float maxArea) {
+    for (int i = 0; i < numHouses; i++) {
+        struct House house = houses[i];
+
+        if (house.price >= minPrice && house.price <= maxPrice &&
+            house.area >= minArea && house.area <= maxArea) {
+            displayHouseInfo(house);
+            judge = 1;
+        }
+    }
+    if (judge != 0)
+    {
+        printf("\t按任意键继续");
+        getchar();
+        getchar();
+    }
+}
+//面积&评分
+void searchHousesByAreaAndScore(struct House houses[], int numHouses, float minArea, float maxArea, int minScore) {
+    for (int i = 0; i < numHouses; i++) {
+        struct House house = houses[i];
+        if (house.area >= minArea && house.area <= maxArea &&
+            house.score >= minScore) {
+            displayHouseInfo(house);
+            judge = 1;
+        }
+    }
+    if (judge != 0)
+    {
+        printf("\t按任意键继续");
+        getchar();
+        getchar();
+    }
+}
+//价格和评分
+void searchHousesByPriceAndScore(struct House houses[], int numHouses, int minPrice, int maxPrice, int minScore) {
+    for (int i = 0; i < numHouses; i++) {
+        struct House house = houses[i];
+
+        if (house.price >= minPrice && house.price <= maxPrice &&
+            house.score >= minScore) {
+            displayHouseInfo(house);
+            judge = 1;
+        }
+    }
+    if (judge != 0)
+    {
+        printf("\t按任意键继续");
+        getchar();
+        getchar();
     }
 }

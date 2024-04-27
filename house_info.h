@@ -37,3 +37,8 @@ void Houserating(struct House* listings, int numListings, int minRating);
 void Houseorientation(struct House* listings, int numListings, char* orientation);
 void Housearea(struct House* listings, int num_listings, int min_area);
 void Houseprice(struct House* listings, int num_listings, int min_price);
+void searchHousesByTimePeriod(struct House houses[], int numHouses, const char* inputTimePeriod);
+void searchHousesByLocation(struct House houses[], int numHouses, const char* keyword);
+void searchHousesByPriceAndArea(struct House houses[], int numHouses, int minPrice, int maxPrice, float minArea, float maxArea);
+void searchHousesByAreaAndScore(struct House houses[], int numHouses, float minArea, float maxArea, int minScore);
+void searchHousesByPriceAndScore(struct House houses[], int numHouses, int minPrice, int maxPrice, int minScore);
